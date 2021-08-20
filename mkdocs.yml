@@ -1,0 +1,24 @@
+site_name: "camundactl"
+site_description: "camunda command line interface like kubectl"
+dev_addr: localhost:9090
+
+nav:
+  - Home:
+      - Overview: index.md
+  - API Doc: api_doc.md
+
+# https://python-markdown.github.io/extensions/
+markdown_extensions:
+  - toc:
+      permalink: True
+  - plantuml_markdown:
+      server: http://www.plantuml.com/plantuml
+
+plugins:
+  - search
+  - mkdocstrings:
+      watch:
+        - camundactl
+  - gen-files:
+      scripts:
+        - docs/gen_api_doc.py

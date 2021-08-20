@@ -1,0 +1,28 @@
+[tool.poetry]
+name = "camundactl"
+version = "0.1.0"
+description = "A Camunda cli that interacts with the rest api"
+authors = ["Jens Blawatt <jens.blawatt@codecentric.de>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+typer = "^0.3.2"
+PyYAML = "^5.4.1"
+requests = "^2.26.0"
+tabulate = "^0.8.9"
+types-requests = "^2.25.6"
+Jinja2 = "^3.0.1"
+jsonpath-ng = "^1.5.3"
+
+[tool.poetry.dev-dependencies]
+pytest = "^6.2.4"
+isort = "^5.9.3"
+black = "^21.7b0"
+mypy = "^0.910"
+flake8 = "^3.9.2"
+pudb = "^2021.1"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
