@@ -58,6 +58,16 @@ $ cctl get processInstances -o json --max-results 1
 ]
 ```
 
+Pipe commands together. Get all active process instances by process defintion and delete them:
+
+```bash
+$ cctl get processInstances --process-definition-id f87b25ce-0577-11ec-8801-0242ac12000a -o jsonpath -oJ "$.[*].id" | xargs -n 1 cctl delete processInstance
+Ok
+Ok
+Ok
+...
+```
+
 ## config
 
 Mac:
