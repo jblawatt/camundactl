@@ -2,6 +2,62 @@
 
 a camunda cli that interacts with the camunda rest api. the cli design is heavily influenced by kubectl.
 
+**features**
+
+- multiple output formats: table, json, jsonpath, jinja2 template
+- shell autocomplete (zsh, bash, fish)
+- shell autocomplete for processInstanceId, incidentIds, aso.
+- configuration for multipe camunda engines
+- ...
+
+**examples**
+
+Load two active process instances and use only the columns id and suspended
+
+```bash
+$ cctl get processInstances --max-results 2 -o table -oH id,suspended
+id                                    suspended
+------------------------------------  -----------
+0027da48-0a61-11ec-bd5f-0242ac120014  False
+003248e7-0b05-11ec-990f-0242ac12000d  False
+```
+
+Load all active process instances and use the result in a jinja2 template.
+
+```bash
+$  cctl get processInstances -o template -oT '{{result|length}}'
+1337
+```
+
+Load five active process instances and apply jsonpath formatting.
+
+```bash
+$ cctl get processInstances -o jsonpath -oJ '$.[*].id' --max-results 5
+0027da48-0a61-11ec-bd5f-0242ac120014
+003248e7-0b05-11ec-990f-0242ac12000d
+005ec7db-0a6c-11ec-bd5f-0242ac120014
+00957ceb-0b18-11ec-990f-0242ac12000d
+00f522c0-0b10-11ec-990f-0242ac12000d
+```
+
+Load only one active process instance and ouput as json.
+
+```bash
+$ cctl get processInstances -o json --max-results 1
+[
+  {
+    "links": [],
+    "id": "0027da48-0a61-11ec-bd5f-0242ac120014",
+    "definitionId": "f87b25ce-0577-11ec-8801-0242ac12000a",
+    "businessKey": null,
+    "caseInstanceId": null,
+    "ended": false,
+    "suspended": false,
+    "tenantId": null
+  }
+]
+```
+
 ## config
 
 Mac:
@@ -12,14 +68,18 @@ version: beta1
 current_engine: localhost
 engines:
   - name: localhost
-    default: true
     url: http://localhost:8080/engine-rest
     auth:
       user: camunda
       password: camunda
   - name: client-a
-    default: false
     url: http://localhost:8080/engine-rest
+    auth:
+      user: camunda
+      password: camunda
+  - name: client-c
+    url: https://localhost:8080/engine-rest
+    verify: false
     auth:
       user: camunda
       password: camunda
@@ -168,3 +228,13 @@ Commands:
 
 
 ```
+
+# TODO
+
+- output column length in options or parameter (currently hard 40)
+
+- display
+  - list of strings
+  - list of objects
+  - object with keys
+  - object with one value

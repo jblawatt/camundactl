@@ -1,15 +1,12 @@
-from camundactl.cmd.helpers import with_output_factory, with_query_param_factory
-import click
 from typing import Any, Dict
-from camundactl.cmd.base import get, describe, AliasCommand
+
+import click
+
 from camundactl.client import Client
+from camundactl.cmd.base import AliasCommand, describe, get
+from camundactl.cmd.helpers import with_output_factory, with_query_option_factory
 
-
-
-PROCESS_INSTANCE_FILTER_PARAMS = [
-    
-]
-
+PROCESS_INSTANCE_FILTER_PARAMS = []
 
 
 @get.command(
@@ -21,7 +18,7 @@ PROCESS_INSTANCE_FILTER_PARAMS = [
 @with_output_factory(
     default_table_headers=["id", "businessKey", "definitionId", "suspended"]
 )
-@with_query_param_factory(params=PROCESS_INSTANCE_FILTER_PARAMS, name="params")
+@with_query_option_factory(options=PROCESS_INSTANCE_FILTER_PARAMS, name="params")
 @click.pass_context
 def get_process_instance(ctx: click.Context, params: Dict, **kwargs) -> None:
     client: Client = ctx.obj["client"]

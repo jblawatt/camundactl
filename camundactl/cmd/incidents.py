@@ -1,10 +1,10 @@
 from typing import Any, Dict
-from camundactl.client import Client
+
 import click
 
-from camundactl.cmd.helpers import with_output_factory, with_query_param_factory
+from camundactl.client import Client
 from camundactl.cmd.base import describe, get
-
+from camundactl.cmd.helpers import with_output_factory, with_query_option_factory
 
 GET_DEFAULT_TABLE_HEADERS = {
     "Id": "id",
@@ -78,8 +78,8 @@ INCIDENT_FILTER_PARAMS = [
 
 @get.command("incidents")
 @with_output_factory(default_table_headers=GET_DEFAULT_TABLE_HEADERS)
-@with_query_param_factory(
-    params=INCIDENT_FILTER_PARAMS,
+@with_query_option_factory(
+    options=INCIDENT_FILTER_PARAMS,
     name="params",
 )
 @click.pass_context

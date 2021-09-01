@@ -3,7 +3,7 @@
 PY_RUN=poetry run 
 PROJECT_ROOT=camundactl
 
-format:
+prettify:
 	$(PY_RUN) isort $(PROJECT_ROOT)
 	$(PY_RUN) black $(PROJECT_ROOT)
 

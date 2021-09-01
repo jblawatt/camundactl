@@ -1,9 +1,10 @@
-import click
 import logging
 from typing import List, Optional, Union
 
-from camundactl.context import load_context
+import click
+
 from camundactl.client import Client, create_session
+from camundactl.context import load_context
 
 
 class AliasGroup(click.Group):
@@ -48,22 +49,33 @@ def root(ctx: click.Context, log_level: Optional[str], engine: Optional[str]):
 @root.group(cls=AliasGroup)
 @click.pass_context
 def get(ctx: click.Context):
+    ctx.ensure_object(dict)
     _ensure_client(ctx, ctx.obj.get("selected_engine"))
 
 
 @root.group(cls=AliasGroup)
 @click.pass_context
 def describe(ctx: click.Context):
+    ctx.ensure_object(dict)
     _ensure_client(ctx, ctx.obj.get("selected_engine"))
 
 
 @root.group(cls=AliasGroup)
 @click.pass_context
 def delete(ctx: click.Context):
+    ctx.ensure_object(dict)
+    _ensure_client(ctx, ctx.obj.get("selected_engine"))
+
+
+@root.group(cls=AliasGroup)
+@click.pass_context
+def apply(ctx: click.Context):
+    ctx.ensure_object(dict)
     _ensure_client(ctx, ctx.obj.get("selected_engine"))
 
 
 def _ensure_client(ctx: click.Context, selected_engine: Optional[str] = None):
+    ctx.ensure_object(dict)
     config = load_context()
     client = None
 
@@ -80,13 +92,13 @@ def _ensure_client(ctx: click.Context, selected_engine: Optional[str] = None):
             client = Client(create_session(engine), engine["url"])
             break
     else:
-        raise Exception(f"not engine with name: {selected_engine}")
+        raise Exception(f"no engine with name: {selected_engine}")
 
     ctx.obj["config"] = config
     ctx.obj["client"] = client
 
 
-from camundactl.cmd import process_instance  # noqa
-
+# from camundactl.cmd import process_instance  # noqa
 # from camundactl.cmd import incidents  # noqa
+from camundactl.cmd import config  # noqa
 from camundactl.cmd import openapi  # noqa

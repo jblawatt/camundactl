@@ -1,4 +1,5 @@
-from requests import session, Session
+from requests import Session, session
+
 from camundactl.context import EngineDict
 
 
