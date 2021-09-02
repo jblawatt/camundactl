@@ -239,12 +239,15 @@ Commands:
 
 ```
 
-# TODO
+# TODO / Ideas
 
 - output column length in options or parameter (currently hard 40)
 
 - display
+
   - list of strings
   - list of objects
   - object with keys
   - object with one value
+
+- use template loader to save and load templates somewhere and let use use them or save some for default

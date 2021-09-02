@@ -5,7 +5,20 @@ import click
 import yaml
 from toolz import pluck
 
-ContextAuthDict = TypedDict("ContextAuthDict", {"user": str, "password": str})
+
+APP_NAME = "CamundaCtl"
+
+
+NEW_CONTEXT_TEMPATE = {
+    "version": "beta1",
+    "current_engine": None,
+    "engines": [],
+}
+
+
+class ContextAuthDict(TypedDict):
+    user: str
+    password: str
 
 
 class EngineDict(TypedDict):
@@ -25,7 +38,7 @@ CAMUNDA_CONFIG_FILE = "config"
 
 
 def _get_configfile() -> Path:
-    app_dir = click.get_app_dir("Camunda")
+    app_dir = click.get_app_dir(APP_NAME)
     return Path(app_dir) / "config.yml"
 
 
@@ -35,7 +48,16 @@ def _write_context(context: ContextDict):
         context = yaml.dump(context, fh)
 
 
+def _ensure_configfile():
+    config_file = _get_configfile()
+    if not config_file.exists():
+        app_dir = Path(click.get_app_dir(APP_NAME))
+        app_dir.mkdir(parents=True, exist_ok=True)
+        _write_context(NEW_CONTEXT_TEMPATE)
+
+
 def load_context() -> ContextDict:
+    _ensure_configfile()
     config_file = _get_configfile()
     with open(config_file, "r") as fh:
         context = yaml.load(fh, Loader=yaml.FullLoader)

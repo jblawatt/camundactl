@@ -12,15 +12,19 @@ from camundactl.cmd.helpers import (
     ArgumentTuple,
     OptionTuple,
     with_args_factory,
-    with_output,
     with_query_option_factory,
-    default_table_output,
+)
+
+from camundactl.output import (
     default_json_output,
     default_jsonpath_output,
-    default_template_output,
     default_object_table_output,
+    default_template_output,
+    default_table_output,
     default_raw_output,
 )
+
+from camundactl.output.decorator import with_output
 
 
 def generic_autocomplete(
@@ -35,8 +39,10 @@ def generic_autocomplete(
 
 
 process_instance_autocomplete = partial(
-    generic_autocomplete, endpoint="/process-instance"
+    generic_autocomplete,
+    endpoint="/process-instance",
 )
+
 incidents_autocomplete = partial(generic_autocomplete, endpoint="/incident")
 process_definition_autocomplete = partial(
     generic_autocomplete, endpoint="/process-definition"
