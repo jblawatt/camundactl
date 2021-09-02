@@ -1,20 +1,40 @@
 # camundactl
 
-a camunda cli that interacts with the camunda rest api. the cli design is heavily influenced by kubectl.
+camundactl (`cctl`) is a command line interface (cli) that interacts with the camunda rest api. It provides commands for all endpoints with the ability to filtes and different output format. The cli usaged is heavily inspired by [kubecl](https://kubernetes.io/) to work with kubernetes.
 
-**features**
+**Features**
 
-- multiple output formats: table, json, jsonpath, jinja2 template
-- shell autocomplete (zsh, bash, fish)
+- request all endpoints, defined in the camunda openapi.json
+- generate `get`, `delete` and `apply` commands from openapi.json
+- dedicated implementations for `describe`
+- multiple output formats: `table`, `json`, `jsonpath`, `template` (jinja2)
+- shell autocomplete for `zsh`, `bash`, `fish`)
 - shell autocomplete for processInstanceId, incidentIds, aso.
 - configuration for multipe camunda engines
 - ...
 
-**examples**
+**Contents**
+
+- [Examples](#examples)
+- [Installation](#installation)
+- [Configuration](#usage/configuration)
+  - [Format](#usage/configuration)
+  - [Add/Select/List/Remove Engine](#usage/configuration)
+  - [Autocomplete](#usage/configuration)
+- [Usage](#usage/configuration)
+  - [Global Options](#usage/configuration)
+  - [`get` Command](#usage/configuration)
+  - [`describe` Command](#usage/configuration)
+  - [`delete` Command](#usage/configuration)
+  - [`apply` Command](#usage/configuration)
+  - [`config` Command](#usage/configuration)
+  - [`output` Option](#usage/configuration)
+
+## Examples
 
 Load two active process instances and use only the columns id and suspended
 
-```bash
+```shell
 $ cctl get processInstances --max-results 2 -o table -oH id,suspended
 id                                    suspended
 ------------------------------------  -----------
@@ -61,20 +81,35 @@ $ cctl get processInstances -o json --max-results 1
 Pipe commands together. Get all active process instances by process defintion and delete them:
 
 ```bash
-$ cctl get processInstances --process-definition-id f87b25ce-0577-11ec-8801-0242ac12000a -o jsonpath -oJ "$.[*].id" | xargs -n 1 cctl delete processInstance
+$ cctl get processInstances --process-definition-id f87b25ce-0577-11ec-8801-0242ac12000a -o jsonpath -oJ "$.[*].id" | xargs -n 1 cctl delete processInstance -o template -oT "Ok"
 Ok
 Ok
 Ok
 ...
 ```
 
-## config
+## Installation
 
-Mac:
-$HOME/Library/Application Support/Camudna/config.yml
+camundactl can be installed via pip.
+
+```bash
+$ pip install camundactl
+```
+
+## Configuration
+
+camundactl uses a config file. The locations differ from os. If the configuration file does not it exists, it becomes created.
+
+- MacOS: `$HOME/Libarary/Application Support/camundactl/config.yml`
+- Linux: `$HOME/.config/camundactl/config.yml`
+- Windows: `$HOME/Appdata/Local/camundactl/config.yml`
+
+### Format
 
 ```yaml
 version: beta1
+extra_paths:
+  - module.to.my.plugin
 current_engine: localhost
 engines:
   - name: localhost
@@ -95,7 +130,102 @@ engines:
       password: camunda
 ```
 
-## usage
+- `version` defines the current config file version for later update purpose
+- `extra_path` is a list of python modules that can be autodiscovered in command discovering to add user defined commands or plugins
+- `current_engine` is the currently selected engine to be used
+- `engine` contains a list of engines within you can switch witch `cctl config engines activate ANOTHER`.
+  - `name` the engines display name
+  - `url` the urls of the camunda engine rest api
+  - `auth` is an object of `user` and `password` for basic authentication
+  - `verify` is a boolen that ignores ssl verification (default `true`)
+
+### Add/List/Activate/Remove Engines
+
+**Add an engine**
+
+Add a camunda engine to the list of engines and directly select it.
+
+```bash
+$ cctl config engines add local http://localhost:8080/engine-rest --select
+```
+
+**List all engines**
+
+List all engines that are configured. The `*` indicates the currently selected engine.
+
+```bash
+$ cctl config engines ls
+local *
+client-a
+```
+
+**Activate an engine**
+
+Activates the `client-a` engine.
+
+```bash
+$ cctl config engines activate client-a
+```
+
+**Remove an engine**
+
+Removes the `client-a` engine.
+
+```bash
+$ cctl config engines remove client-a
+```
+
+### Autocomplete
+
+camundactl provides the
+
+## Usage
+
+### Gloabl options
+
+--help
+--log
+-e, --engine
+
+### `get` Resource Information
+
+### `delete` Resource Information
+
+### `apply` Resource Information
+
+### `describe` Resource Information
+
+### `output` Option
+
+#### Table Output
+
+The camunda responses are nearly all of type `application/json`. If the response is of type `array` a table will be printed. If it's an `object` a table with `key` and `value` headers are used.
+
+**Options**
+
+- `-o table`
+- `-oH`, `--output-headers` gives the possibility to select the columns to show
+- `-oCL`, `--output-cell-length` cell values of type string are limited to `40` characters.
+
+_Example_
+
+```bash
+$ cctl get processInstances -o table -oH id,suspended
+```
+
+#### JSON Output
+
+Prints the json API response with end indent of 2.
+
+**Options**
+
+- `-o json`
+
+#### JSON-Path Output
+
+#### Template Output
+
+#### Raw Output
 
 ### root command
 
@@ -241,8 +371,7 @@ Commands:
 
 ## autocomplete
 
-_CCTL_COMPLETE=zsh_source cctl
-
+\_CCTL_COMPLETE=zsh_source cctl
 
 # TODO / Ideas
 
