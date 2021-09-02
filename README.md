@@ -239,6 +239,11 @@ Commands:
 
 ```
 
+## autocomplete
+
+_CCTL_COMPLETE=zsh_source cctl
+
+
 # TODO / Ideas
 
 - output column length in options or parameter (currently hard 40)

@@ -1,4 +1,5 @@
 import json
+
 import click
 
 from camundactl.output.base import OutputHandler

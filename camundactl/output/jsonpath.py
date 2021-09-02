@@ -1,6 +1,8 @@
 from typing import Any
-from jsonpath_ng import parse
+
 import click
+from jsonpath_ng import parse
+
 from camundactl.output.base import OutputHandler
 
 

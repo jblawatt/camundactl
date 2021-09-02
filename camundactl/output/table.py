@@ -1,8 +1,9 @@
-from typing import List, Any, Optional
+from typing import Any, List, Optional
 
-from camundactl.output.base import OutputHandler
 import click
 from tabulate import tabulate
+
+from camundactl.output.base import OutputHandler
 
 
 def _ensure_length(value: Any, max_length: int = 1000):
@@ -61,14 +62,23 @@ class TableOutputHandler(OutputHandler):
 
         if not headers:
             # use the keys as headers, but remove all backlist headers
+            if not result:
+                click.echo("empty result")
+                return
             first, *_ = result
-            headers = [
-                key for key in first.keys() if key not in self.table_headers_backlist
-            ]
-            result = [
-                [_ensure_length(item.get(key), cell_max_length) for key in headers]
-                for item in result
-            ]
+            if isinstance(first, dict):
+                headers = [
+                    key
+                    for key in first.keys()
+                    if key not in self.table_headers_backlist
+                ]
+                result = [
+                    [_ensure_length(item.get(key), cell_max_length) for key in headers]
+                    for item in result
+                ]
+            else:
+                headers = ("unknown",)
+                result = [(item,) for item in result]
         elif isinstance(headers, (tuple, list)):
             result = [
                 [_ensure_length(row[key], cell_max_length) for key in headers]

@@ -5,7 +5,6 @@ import click
 import yaml
 from toolz import pluck
 
-
 APP_NAME = "CamundaCtl"
 
 

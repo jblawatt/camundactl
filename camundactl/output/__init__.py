@@ -4,7 +4,6 @@ from camundactl.output.raw import RawOutputHandler
 from camundactl.output.table import ObjectTableOutputHandler, TableOutputHandler
 from camundactl.output.template import TemplateOutputHandler
 
-
 default_table_output = TableOutputHandler(table_headers_backlist=["links"])
 default_object_table_output = ObjectTableOutputHandler()
 default_json_output = JSONOutputHandler()

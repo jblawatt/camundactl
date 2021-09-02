@@ -1,6 +1,8 @@
 from typing import Any
-from jinja2 import Template
+
 import click
+from jinja2 import Template
+
 from camundactl.output.base import OutputHandler
 
 

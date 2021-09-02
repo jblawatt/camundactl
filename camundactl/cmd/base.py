@@ -1,3 +1,4 @@
+import importlib
 import logging
 from typing import List, Optional, Union
 
@@ -46,28 +47,30 @@ def root(ctx: click.Context, log_level: Optional[str], engine: Optional[str]):
     ctx.obj["selected_engine"] = engine
 
 
-@root.group(cls=AliasGroup)
+@root.group(cls=AliasGroup, help="query resources of camunda engine")
 @click.pass_context
 def get(ctx: click.Context):
     ctx.ensure_object(dict)
     _ensure_client(ctx, ctx.obj.get("selected_engine"))
 
 
-@root.group(cls=AliasGroup)
+@root.group(
+    cls=AliasGroup, help="get complex collected information about engine ressources"
+)
 @click.pass_context
 def describe(ctx: click.Context):
     ctx.ensure_object(dict)
     _ensure_client(ctx, ctx.obj.get("selected_engine"))
 
 
-@root.group(cls=AliasGroup)
+@root.group(cls=AliasGroup, help="delete ressources")
 @click.pass_context
 def delete(ctx: click.Context):
     ctx.ensure_object(dict)
     _ensure_client(ctx, ctx.obj.get("selected_engine"))
 
 
-@root.group(cls=AliasGroup)
+@root.group(cls=AliasGroup, help="apply changes to the engine")
 @click.pass_context
 def apply(ctx: click.Context):
     ctx.ensure_object(dict)
@@ -98,7 +101,13 @@ def _ensure_client(ctx: click.Context, selected_engine: Optional[str] = None):
     ctx.obj["client"] = client
 
 
-# from camundactl.cmd import process_instance  # noqa
-# from camundactl.cmd import incidents  # noqa
+def autodiscover(paths):
+    for path in paths:
+        importlib.import_module(path)
+
+
 from camundactl.cmd import config  # noqa
 from camundactl.cmd import openapi  # noqa
+
+# import custom modules and overrides
+autodiscover(load_context().get("extra_paths", []))

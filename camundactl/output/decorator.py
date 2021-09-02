@@ -1,10 +1,10 @@
+import functools
+from contextlib import contextmanager
+from typing import Optional
+
 import click
 
-import functools
-
-from typing import Optional
 from camundactl.output.base import OutputHandler
-from contextlib import contextmanager
 
 
 @contextmanager

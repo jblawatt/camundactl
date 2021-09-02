@@ -1,7 +1,9 @@
 import sys
 from typing import Any
-from camundactl.output.base import OutputHandler
+
 import click
+
+from camundactl.output.base import OutputHandler
 
 
 class RawOutputHandler(OutputHandler):
