@@ -1,9 +1,15 @@
 [tool.poetry]
 name = "camundactl"
-version = "0.1.0"
+version = "0.1.0a2"
 description = "A Camunda cli that interacts with the rest api"
-authors = ["Jens Blawatt <jens.blawatt@codecentric.de>"]
+authors = ["Jens Blawatt <jblawatt@googlemail.com>"]
 license = "MIT"
+readme = "README.md"
+homepage = "https://github.com/jblawatt/camundactl"
+repository = "https://github.com/jblawatt/camundactl"
+documentation = "https://github.com/jblawatt/camundactl"
+keywords = ["camunda", "click", "cli"]
+
 
 [tool.poetry.dependencies]
 python = "^3.9"

@@ -1,6 +1,6 @@
 #!/usr/bin/env make
 
-PY_RUN=poetry run 
+PY_RUN=poetry run
 PROJECT_ROOT=camundactl
 
 prettify:
@@ -17,5 +17,5 @@ docs:
 
 
 test:
-	$(PY_RUN) pytest --cov-report=html --cov-report=term .
-	
+	$(PY_RUN) pytest --cov-report=html --cov-report=term tests
+

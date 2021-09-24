@@ -1,6 +1,7 @@
 import json
 from functools import lru_cache, partial
 from typing import Callable, Dict, List, Optional, Tuple, TypedDict
+from http import HTTPStatus
 
 import click
 import jsonschema

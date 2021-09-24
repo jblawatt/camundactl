@@ -1,4 +1,11 @@
+import asyncio
+
 from camundactl.cmd.base import root
 
-if __name__ == "__main__":
+
+async def _main():
     root()
+
+
+if __name__ == "__main__":
+    asyncio.run(root())

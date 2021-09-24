@@ -5,7 +5,7 @@ import click
 import yaml
 from toolz import pluck
 
-APP_NAME = "CamundaCtl"
+APP_NAME = "camundactl"
 
 
 NEW_CONTEXT_TEMPATE = {

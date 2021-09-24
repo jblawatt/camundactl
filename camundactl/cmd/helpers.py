@@ -1,8 +1,11 @@
 import functools
 import re
 from typing import Callable, List, NamedTuple, Optional
+from http import HTTPStatus
 
 import click
+from click.exceptions import ClickException
+from requests.models import HTTPError
 
 
 class OptionTuple(NamedTuple):
@@ -125,13 +128,20 @@ def with_exception_handler():
         @functools.wraps(func)
         def wrapper(*args, show_traceback, **kwargs):
             try:
-                return func(*args, **kwargs)
+                try:
+                    return func(*args, **kwargs)
+                except HTTPError as http_error:
+                    if http_error.response.status_code != HTTPStatus.NOT_FOUND:
+                        raise
+                    context, *_ = args
+                    raise ClickException(
+                        f"the object '{context.info_name}' you requested does not exists"
+                    )
             except Exception as error:
                 if show_traceback:
                     raise
                 else:
-                    click.secho(str(error), fg="red")
-                return 1
+                    raise click.ClickException(str(error))
 
         return wrapper
 

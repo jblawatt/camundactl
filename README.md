@@ -177,7 +177,18 @@ $ cctl config engines remove client-a
 
 ### Autocomplete
 
-camundactl provides the
+camundactl provides the functionality to autocomplete at the console.
+
+camundactl bases on [click](http://click.parallelprojects.com/), which
+autocomplete method could be used.
+
+**Example for zsh**
+
+```bash
+$ _CCTL_COMPLETE=zsh_source cctl > $HOME/.cctl-completion.sh
+```
+
+You can find more Details on the project-page: https://click.palletsprojects.com/en/8.0.x/shell-completion/
 
 ## Usage
 
@@ -189,13 +200,41 @@ camundactl provides the
 
 ### `get` Resource Information
 
+Get commands provides the ability to request ressource information from a given engine. It contains all OpenAPI Operations of the Verb `get`.
+
 ### `delete` Resource Information
+
+Delete commands provide the ability to delete specific ressources in the camunda engine.
 
 ### `apply` Resource Information
 
+Apply commands provide the ability to apply changes to the camunda engine. They combine the functionality of `put` and `post` verbs and these operations.
+
+As `kubectl` you can use `apply` in combination with files that contains the payload.
+
+You can use JSON or YAML payloads.
+
+```bash
+$ cat EOF>>
+value: hello-world
+type: String
+EOF >> variable.yaml
+
+$ cctl apply processInstanceVariable foobar 0027da48-0a61-11ec-bd5f-0242ac120014 -y variable.yml
+```
+
+**Schema validation**
+If provided, the given payload becomes validated against the openapi schema. The openapi documentation sometimes does not fully match the api. (e.g. while updating variables. The values is describes as `object` but values of primitive variables are also allowed.)
+
+To skip this use the option `--skip-validation`.
+
 ### `describe` Resource Information
 
+_not quite implemented_. It's planned to use this commands to collect and output complex informationations about a given ressoure including combining multiple endpoints (e.g. process instances with all occured incidents and variable information.)
+
 ### `output` Option
+
+The `-o/--output` option defines the output format. The default ist `table`. All other options are described in the following.
 
 #### Table Output
 
@@ -223,7 +262,12 @@ Prints the json API response with end indent of 2.
 
 #### JSON-Path Output
 
+`-o jsonpath` activates a jsonpath output. With `-oJ` you can apply the jsonpath filter which will be applied. 
+For this [jsonpath-ng](https://pypi.org/project/jsonpath-ng/) is used. There you can find further information about the filter format.
+
 #### Template Output
+
+
 
 #### Raw Output
 
@@ -385,3 +429,4 @@ Commands:
   - object with one value
 
 - use template loader to save and load templates somewhere and let use use them or save some for default
+- templates with more context variables. not just "result"

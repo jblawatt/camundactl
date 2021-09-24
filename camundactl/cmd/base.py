@@ -108,6 +108,7 @@ def autodiscover(paths):
 
 from camundactl.cmd import config  # noqa
 from camundactl.cmd import openapi  # noqa
+from camundactl.cmd import process_instance  # noqa
 
 # import custom modules and overrides
 autodiscover(load_context().get("extra_paths", []))

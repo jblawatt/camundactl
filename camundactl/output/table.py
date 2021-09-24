@@ -1,12 +1,11 @@
 from typing import Any, List, Optional
-
 import click
 from tabulate import tabulate
 
 from camundactl.output.base import OutputHandler
 
 
-def _ensure_length(value: Any, max_length: int = 1000):
+def _ensure_length(value: Any, max_length: int = 1000) -> str:
     """makes sure the value is no longer then the given lengths"""
     if isinstance(value, str):
         if len(value) > max_length:
