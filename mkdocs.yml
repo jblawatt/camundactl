@@ -1,10 +1,17 @@
 site_name: "camundactl"
 site_description: "camunda command line interface like kubectl"
+site_url: "http://camundactl.github.io"
+repo_url: "http://github.com/jblawatt/camundactl"
+
 dev_addr: localhost:9090
 
 nav:
   - Home:
       - Overview: index.md
+      - Examples: examples.md
+      - Configuration: configuration.md
+      - Usage: usage.md
+      - Output: output.md
   - API Doc: api_doc.md
 
 # https://python-markdown.github.io/extensions/
@@ -22,3 +29,8 @@ plugins:
   - gen-files:
       scripts:
         - docs/gen_api_doc.py
+
+theme:
+  name: readthedocs
+  locale: en
+  hightlightjs: true

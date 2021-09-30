@@ -19,3 +19,5 @@ docs:
 test:
 	$(PY_RUN) pytest --cov-report=html --cov-report=term tests
 
+
+.PHONY: docs

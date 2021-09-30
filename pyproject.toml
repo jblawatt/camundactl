@@ -32,6 +32,12 @@ mypy = "^0.910"
 flake8 = "^3.9.2"
 pudb = "^2021.1"
 pyinstaller = "^4.5.1"
+mkdocs = "^1.2.2"
+mkdocstrings = "^0.16.1"
+mkdocs-gen-files = "^0.3.3"
+plantuml-markdown = "^3.4.3"
+mkdocs-rokubun = "^5.5.12"
+mkdocs-gitbook = "^0.0.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
