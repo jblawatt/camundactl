@@ -1,7 +1,7 @@
 import functools
 import re
-from typing import Callable, List, NamedTuple, Optional
 from http import HTTPStatus
+from typing import Callable, List, NamedTuple, Optional
 
 import click
 from click.exceptions import ClickException
@@ -33,17 +33,14 @@ def with_query_option_factory(options: List[OptionTuple], name: str):
 
             long = f"--{value}"
 
-            # fixme: no short options currently becouse of naming conflicts
-            # first, *rest = parts
-            # short = "-" + first[0].lower() + "".join(map(lambda s: s[0], rest))
-
             click_kwargs = {}
 
             if not option.multiple:
                 if option.type_ == bool:
+                    long = f"--{value}/--not-{value}"
+                    # FIXME: cannt always be false
                     click_kwargs.update(
                         {
-                            "is_flag": True,
                             "default": False,
                         }
                     )
@@ -61,8 +58,15 @@ def with_query_option_factory(options: List[OptionTuple], name: str):
             func = click_option(func)
             options_generated[option.name] = click_option
 
+        func = click.option(
+            "--query-extra",
+            "query_extra",
+            help="extra query parameters, not listed in openapi (format: PARAM=VALUE)",
+            multiple=True
+        )(func)
+
         @functools.wraps(func)
-        def wrapper(*args, **kwargs):
+        def wrapper(*args, query_extra, **kwargs):
 
             query_params = {}
 
@@ -79,6 +83,10 @@ def with_query_option_factory(options: List[OptionTuple], name: str):
                     value = "true" if value else "false"
 
                 query_params[option.name] = value
+
+            for extra in query_extra:
+                extra_name, extra_value = extra.strip().split("=")
+                query_params[extra_name] = extra_value
 
             return func(*args, **{name: query_params}, **kwargs)
 
@@ -133,10 +141,18 @@ def with_exception_handler():
                 except HTTPError as http_error:
                     if http_error.response.status_code != HTTPStatus.NOT_FOUND:
                         raise
-                    context, *_ = args
-                    raise ClickException(
-                        f"the object '{context.info_name}' you requested does not exists"
-                    )
+                    try:
+                        context, *_ = args
+                    except ValueError:
+                        # no context passed and args are empty
+                        # FIXME: should not happen. where is the context gone?
+                        raise ClickException(
+                            f"error loading requested object: {http_error}"
+                        )
+                    else:
+                        raise ClickException(
+                            f"the object '{context.info_name}' you requested does not exists"
+                        )
             except Exception as error:
                 if show_traceback:
                     raise

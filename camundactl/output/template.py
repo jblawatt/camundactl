@@ -1,11 +1,10 @@
 from typing import Any, Dict, Optional
 
 import click
-from jinja2 import Template, Environment, TemplateNotFound
+from jinja2 import Environment, Template, TemplateNotFound
 from jinja2.loaders import DictLoader
 
 from camundactl.output.base import OutputHandler
-
 
 DEFAULT_TEMPLATES_DICT = {
     "default": "{{result}}",

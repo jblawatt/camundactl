@@ -1,6 +1,6 @@
 from requests import Session, session
 
-from camundactl.context import EngineDict
+from camundactl.config import EngineDict
 
 
 def create_session(engine_config: EngineDict) -> Session:

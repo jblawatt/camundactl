@@ -1,12 +1,12 @@
-from camundactl.cmd.helpers import with_exception_handler
-from camundactl.output.decorator import with_output
-from camundactl.output import default_json_output, TemplateOutputHandler
 from typing import Any, Dict
 
 import click
 
 from camundactl.client import Client
 from camundactl.cmd.base import describe
+from camundactl.cmd.helpers import with_exception_handler
+from camundactl.output import TemplateOutputHandler, default_json_output
+from camundactl.output.decorator import with_output
 
 PROCESS_INSTANCE_FILTER_PARAMS = []
 
@@ -47,6 +47,7 @@ ProcessDefinition.
     Id:      {{processDefinitionId}}
     Version: {{processDefinitionVersion}}
 
+State:       {{state}}
 StartTime:   {{startTime}}
 EndTime:     {{startTime}}
 RemovalTime: {{removalTime}}
@@ -86,7 +87,8 @@ def describe_process_instance(ctx: click.Context, process_instance_id: str, **kw
     pi_resp_json = pi_resp.json()
 
     path = f"/variable-instance"
-    params: Dict[str, Any] = {"processInstanceIdIn": process_instance_id}
+    params: Dict[str, Any] = {"processInstanceIdIn": process_instance_id,
+                              "deserializeValue": "false"}
     var_resp = client.get(path, params=params)
     var_resp_json = var_resp.json()
 
@@ -112,8 +114,14 @@ def describe_historic_process_instance(
     pi_resp_json = pi_resp.json()
 
     path = f"/history/variable-instance"
-    params: Dict[str, Any] = {"processInstanceId": process_instance_id}
+    params: Dict[str, Any] = {"processInstanceId": process_instance_id,
+                              "deserializeValues": "false"}
     var_resp = client.get(path, params=params)
     var_resp_json = var_resp.json()
 
-    return {**pi_resp_json, "variables": var_resp_json}
+    path = f"/history/incident"
+    params: Dict[str, Any] = {"processInstanceId": process_instance_id}
+    inc_resp = client.get(path, params=params)
+    inc_resp_json = inc_resp.json()
+
+    return {**pi_resp_json, "variables": var_resp_json, "incidents": inc_resp_json}

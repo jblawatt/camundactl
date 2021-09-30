@@ -5,7 +5,12 @@ from typing import List, Optional, Union
 import click
 
 from camundactl.client import Client, create_session
-from camundactl.context import load_context
+from camundactl.config import ConfigDict, load_config
+
+try:
+    from rainbow_logging_handler import RainbowLoggingHandler as DefaultLogHandler
+except ImportError:
+    from logging import StreamHandler as DefaultLogHandler
 
 
 class AliasGroup(click.Group):
@@ -33,72 +38,95 @@ class AliasCommand(click.MultiCommand):
 
 @click.group(cls=AliasGroup)
 @click.option(
-    "-l", "--log-level", "log_level", help="activates the logger with the given level"
-)
-@click.option("-e", "--engine", "engine", help="define the engine name to be used")
-@click.pass_context
-def root(ctx: click.Context, log_level: Optional[str], engine: Optional[str]):
-    if log_level is not None:
-        assert log_level in ("DEBUG", "INFO", "WARN", "WARNING", "ERROR")
-        logging.basicConfig(level=getattr(logging, log_level))
-    ctx.ensure_object(dict)
-
-    ctx.obj["log_level"] = log_level
-    ctx.obj["selected_engine"] = engine
-
-
-@root.group(cls=AliasGroup, help="query resources of camunda engine")
-@click.pass_context
-def get(ctx: click.Context):
-    ctx.ensure_object(dict)
-    _ensure_client(ctx, ctx.obj.get("selected_engine"))
-
-
-@root.group(
-    cls=AliasGroup, help="get complex collected information about engine ressources"
+    "-l",
+    "--log-level",
+    "log_level",
+    type=click.Choice(["DEBUG", "WARNING", "INFO", "ERROR"], case_sensitive=False),
+    default=None,
+    required=False,
 )
 @click.pass_context
-def describe(ctx: click.Context):
+def root(ctx: click.Context, log_level: Optional[str] = None) -> None:
     ctx.ensure_object(dict)
-    _ensure_client(ctx, ctx.obj.get("selected_engine"))
+    config_ = load_config()
+    if log_level or (log_level := config_.get("log_level", "")):
+        import sys
+
+        logging.basicConfig(
+            level=getattr(logging, log_level), handlers=[DefaultLogHandler(sys.stdout)]
+        )
 
 
-@root.group(cls=AliasGroup, help="delete ressources")
-@click.pass_context
-def delete(ctx: click.Context):
-    ctx.ensure_object(dict)
-    _ensure_client(ctx, ctx.obj.get("selected_engine"))
+def _group_factory(parent, parent_kwargs):
+    @parent.group(**parent_kwargs)
+    @click.pass_context
+    @click.option("-e", "--engine", "engine", required=False)
+    def group(ctx: click.Context, engine: Optional[str]):
+        config_ = load_config()
+        engine = engine or config_.get("current_engine")
+        logging.debug("using engine %s", engine)
+        client = _create_client(config_, engine)
+        ctx.obj["client"] = client
+        ctx.obj["config"] = config
+
+    return group
 
 
-@root.group(cls=AliasGroup, help="apply changes to the engine")
-@click.pass_context
-def apply(ctx: click.Context):
-    ctx.ensure_object(dict)
-    _ensure_client(ctx, ctx.obj.get("selected_engine"))
+def _create_client(config_: ConfigDict, selected_engine: Optional[str] = None):
 
-
-def _ensure_client(ctx: click.Context, selected_engine: Optional[str] = None):
-    ctx.ensure_object(dict)
-    config = load_context()
-    client = None
-
-    if not config["engines"]:
+    if not config_["engines"]:
         raise Exception("invalid configuration")
 
     if selected_engine is None:
-        selected_engine = config.get("current_engine")
+        selected_engine = config_.get("current_engine")
         if not selected_engine:
             raise Exception("no current and no given engine")
 
-    for engine in config["engines"]:
+    for engine in config_["engines"]:
         if selected_engine == engine["name"]:
-            client = Client(create_session(engine), engine["url"])
-            break
+            return Client(create_session(engine), engine["url"])
     else:
         raise Exception(f"no engine with name: {selected_engine}")
 
-    ctx.obj["config"] = config
-    ctx.obj["client"] = client
+
+get = _group_factory(
+    root,
+    dict(
+        name="get",
+        cls=AliasGroup,
+        help="query resources of camunda engine",
+    ),
+)
+
+
+describe = _group_factory(
+    root,
+    dict(
+        name="describe",
+        cls=AliasGroup,
+        help="get complex collected information about engine ressources",
+    ),
+)
+
+
+delete = _group_factory(
+    root,
+    dict(
+        name="delete",
+        cls=AliasGroup,
+        help="delete ressources",
+    ),
+)
+
+
+apply = _group_factory(
+    root,
+    dict(
+        name="apply",
+        cls=AliasGroup,
+        help="apply changes to the engine",
+    ),
+)
 
 
 def autodiscover(paths):
@@ -107,8 +135,9 @@ def autodiscover(paths):
 
 
 from camundactl.cmd import config  # noqa
+from camundactl.cmd import info  # noqa
 from camundactl.cmd import openapi  # noqa
 from camundactl.cmd import process_instance  # noqa
 
 # import custom modules and overrides
-autodiscover(load_context().get("extra_paths", []))
+autodiscover(load_config().get("extra_paths", []))

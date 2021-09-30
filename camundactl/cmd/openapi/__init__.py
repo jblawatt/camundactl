@@ -1,10 +1,12 @@
 import json
-from camundactl.cmd.openapi.factory import OpenAPICommandFactory
 from importlib.resources import open_text
 
+from camundactl.cmd.openapi.factory import OpenAPICommandFactory
 
-factory = OpenAPICommandFactory(json.load(open_text(__package__, "openapi.json")))
+command_factory = OpenAPICommandFactory(
+    json.load(open_text(__package__, "openapi.json"))
+)
 
-factory.create_get_commands()
-factory.create_delete_commands()
-factory.create_apply_commands()
+command_factory.create_get_commands()
+command_factory.create_delete_commands()
+command_factory.create_apply_commands()

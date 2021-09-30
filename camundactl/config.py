@@ -1,18 +1,11 @@
 from pathlib import Path
-from typing import List, Optional, TypedDict
+from typing import List, Literal, Optional, TypedDict, cast
 
 import click
 import yaml
 from toolz import pluck
 
 APP_NAME = "camundactl"
-
-
-NEW_CONTEXT_TEMPATE = {
-    "version": "beta1",
-    "current_engine": None,
-    "engines": [],
-}
 
 
 class ContextAuthDict(TypedDict):
@@ -27,13 +20,20 @@ class EngineDict(TypedDict):
     verify: bool
 
 
-class ContextDict(TypedDict):
+class ConfigDict(TypedDict):
     version: str
     current_engine: Optional[str]
     engines: List[EngineDict]
+    extra_paths: Optional[List[str]]
+    log_level: Optional[Literal["DEBUG", "INFO", "WARNING", "ERROR"]]
 
 
 CAMUNDA_CONFIG_FILE = "config"
+
+
+NEW_CONTEXT_TEMPATE = ConfigDict(
+    version="beta1", current_engine=None, engines=[], log_level="ERROR", extra_paths=[]
+)
 
 
 def _get_configfile() -> Path:
@@ -41,13 +41,13 @@ def _get_configfile() -> Path:
     return Path(app_dir) / "config.yml"
 
 
-def _write_context(context: ContextDict):
+def _write_context(config: ConfigDict) -> None:
     config_file = _get_configfile()
     with open(config_file, "w") as fh:
-        context = yaml.dump(context, fh)
+        yaml.dump(config, fh)
 
 
-def _ensure_configfile():
+def _ensure_configfile() -> None:
     config_file = _get_configfile()
     if not config_file.exists():
         app_dir = Path(click.get_app_dir(APP_NAME))
@@ -55,40 +55,38 @@ def _ensure_configfile():
         _write_context(NEW_CONTEXT_TEMPATE)
 
 
-def load_context() -> ContextDict:
+def load_config() -> ConfigDict:
     _ensure_configfile()
     config_file = _get_configfile()
     with open(config_file, "r") as fh:
-        context = yaml.load(fh, Loader=yaml.FullLoader)
-
-    return context
+        return cast(ConfigDict, yaml.load(fh, Loader=yaml.FullLoader))
 
 
-def add_engine(engine: EngineDict, select: bool = False):
-    context = load_context()
-    engines = list(pluck("name", context["engines"]))
+def add_engine(engine: EngineDict, select: bool = False) -> None:
+    config = load_config()
+    engines = list(pluck("name", config["engines"]))
     if engine["name"] in engines:
         raise Exception("Engine with name '%s' already exists." % engine["name"])
-    context["engines"].append(engine)
+    config["engines"].append(engine)
     if select:
-        context["current_engine"] = engine["name"]
+        config["current_engine"] = engine["name"]
 
-    _write_context(context)
+    _write_context(config)
 
 
-def remove_engine(name: str):
-    context = load_context()
+def remove_engine(name: str) -> None:
+    config = load_config()
 
-    context["engines"] = [e for e in context["engines"] if e["name"] != name]
+    config["engines"] = [e for e in config["engines"] if e["name"] != name]
 
-    if context["current_engine"] == name:
-        context["current_engine"] = None
+    if config["current_engine"] == name:
+        config["current_engine"] = None
 
-    _write_context(context)
+    _write_context(config)
 
 
 def activate_engine(name: str):
-    context = load_context()
+    context = load_config()
     engine_names = list(pluck("name", context["engines"]))
     if name not in engine_names:
         raise Exception(

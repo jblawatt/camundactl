@@ -4,7 +4,7 @@ import click
 
 from camundactl.cmd.base import root
 from camundactl.cmd.helpers import with_exception_handler
-from camundactl.context import activate_engine, add_engine, load_context, remove_engine
+from camundactl.config import activate_engine, add_engine, load_config, remove_engine
 
 
 @root.group("config")
@@ -20,7 +20,7 @@ def engines():
 @engines.command("ls")
 @with_exception_handler()
 def list_():
-    context = load_context()
+    context = load_config()
     for engine in context["engines"]:
         is_current = engine["name"] == context.get("current_engine")
         print(engine["name"] + (" *" if is_current else ""))

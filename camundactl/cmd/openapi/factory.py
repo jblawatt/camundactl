@@ -1,7 +1,7 @@
 import json
 from functools import lru_cache, partial
-from typing import Callable, Dict, List, Optional, Tuple, TypedDict
 from http import HTTPStatus
+from typing import Callable, Dict, List, Optional, Tuple, TypedDict
 
 import click
 import jsonschema
@@ -9,7 +9,7 @@ import yaml
 from toolz import first, second
 
 from camundactl.client import Client
-from camundactl.cmd.base import _ensure_client, apply, delete, get
+from camundactl.cmd.base import _create_client, apply, delete, get
 from camundactl.cmd.helpers import (
     ArgumentTuple,
     OptionTuple,
@@ -32,7 +32,7 @@ from camundactl.output.decorator import with_output
 def generic_autocomplete(
     ctx: click.Context, param: str, incomplete: str, endpoint: str
 ) -> List[str]:
-    _ensure_client(ctx)
+    _create_client(ctx)
     client: Client = ctx.obj["client"]
     resp = client.get(endpoint)
     resp.raise_for_status()

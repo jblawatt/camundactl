@@ -1,4 +1,5 @@
 from typing import Any, List, Optional
+
 import click
 from tabulate import tabulate
 
