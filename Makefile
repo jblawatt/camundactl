@@ -20,4 +20,8 @@ test:
 	$(PY_RUN) pytest --cov-report=html --cov-report=term tests
 
 
+requirements.txt:
+	poetry export -f requirements.txt --without-hashes --dev > requirements.txt
+
+
 .PHONY: docs
