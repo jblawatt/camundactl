@@ -21,7 +21,7 @@ test:
 
 
 requirements.txt:
-	poetry export -f requirements.txt --without-hashes --dev > requirements.txt
+	poetry export -f requirements.txt --without-hashes > requirements.txt
 
 
 .PHONY: docs
