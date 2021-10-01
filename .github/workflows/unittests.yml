@@ -1,4 +1,4 @@
-name: Publish docs via GitHub Pages
+name: Run unittests
 on:
   push:
     branches: [ main ]
@@ -13,9 +13,14 @@ jobs:
       - uses: actions/checkout@v2
         name: Checkout main
 
-      - name: Deploy docs
-        uses: mhausenblas/mkdocs-deploy-gh-pages@master
-        env:
-          REQUIREMENTS: mkdocs-requirements.txt
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          CONFIG_FILE: mkdocs.yml
+      - name: Setup Python
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.9
+      - name: Install Dependencies
+        run: |
+          python -m pip install poetry
+          python -m poetry install --dev
+      - name: Test
+        run: |
+           python -m pytest --cov=camundactl 
