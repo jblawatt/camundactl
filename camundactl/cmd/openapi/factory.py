@@ -2,7 +2,9 @@ import json
 from functools import lru_cache, partial
 from http import HTTPStatus
 from typing import Callable, Dict, List, Optional, Tuple, TypedDict
+from unittest.case import expectedFailure
 
+import logging
 import click
 import jsonschema
 import yaml
@@ -29,13 +31,20 @@ from camundactl.output.base import OutputHandler
 from camundactl.output.decorator import with_output
 
 
+logger = logging.getLogger(__name__)
+
+
 def generic_autocomplete(
     ctx: click.Context, param: str, incomplete: str, endpoint: str
 ) -> List[str]:
     _create_client(ctx)
     client: Client = ctx.obj["client"]
     resp = client.get(endpoint)
-    resp.raise_for_status()
+    try:
+        resp.raise_for_status()
+    except Exception as error:
+        logger.error("error autocompleting param '%s': %s", param, error)
+        return []
     resp_json = resp.json()
     return [item["id"] for item in resp_json if item["id"].startswith(incomplete)]
 

@@ -87,8 +87,10 @@ def describe_process_instance(ctx: click.Context, process_instance_id: str, **kw
     pi_resp_json = pi_resp.json()
 
     path = f"/variable-instance"
-    params: Dict[str, Any] = {"processInstanceIdIn": process_instance_id,
-                              "deserializeValue": "false"}
+    params: Dict[str, Any] = {
+        "processInstanceIdIn": process_instance_id,
+        "deserializeValue": "false",
+    }
     var_resp = client.get(path, params=params)
     var_resp_json = var_resp.json()
 
@@ -114,8 +116,10 @@ def describe_historic_process_instance(
     pi_resp_json = pi_resp.json()
 
     path = f"/history/variable-instance"
-    params: Dict[str, Any] = {"processInstanceId": process_instance_id,
-                              "deserializeValues": "false"}
+    params: Dict[str, Any] = {
+        "processInstanceId": process_instance_id,
+        "deserializeValues": "false",
+    }
     var_resp = client.get(path, params=params)
     var_resp_json = var_resp.json()
 

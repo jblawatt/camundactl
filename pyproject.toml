@@ -38,6 +38,9 @@ mkdocs-gen-files = "^0.3.3"
 plantuml-markdown = "^3.4.3"
 mkdocs-rokubun = "^5.5.12"
 mkdocs-gitbook = "^0.0.1"
+responses = "^0.14.0"
+pytest-cov = "^2.12.1"
+coverage = "^5.5"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

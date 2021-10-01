@@ -3,6 +3,10 @@ from importlib.resources import open_text
 
 from camundactl.cmd.openapi.factory import OpenAPICommandFactory
 
+
+__all__ = ["command_factory"]
+
+
 command_factory = OpenAPICommandFactory(
     json.load(open_text(__package__, "openapi.json"))
 )

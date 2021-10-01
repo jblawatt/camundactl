@@ -62,7 +62,7 @@ def with_query_option_factory(options: List[OptionTuple], name: str):
             "--query-extra",
             "query_extra",
             help="extra query parameters, not listed in openapi (format: PARAM=VALUE)",
-            multiple=True
+            multiple=True,
         )(func)
 
         @functools.wraps(func)
