@@ -102,7 +102,7 @@ def test_openapi_command_factory_create_command_name(
     ],
 )
 def test_openapi_command_factory_get_options(
-    type_: str, type_expected: Type, multiple_expected: bool
+    type_: str, type_expected: type, multiple_expected: bool
 ):
     name = str(uuid4())
     description = str(uuid4())
@@ -131,4 +131,34 @@ def test_openapi_command_factory_get_options(
     assert option.multiple is multiple_expected
     assert option.type_ == type_expected
     assert option.autocomplete == autocomplete_mock
+
+
+def test_openapi_command_factory_get_args():
+
+    name = str(uuid4())
+    description = str(uuid4())
+
+    autocomplete_mock = Mock()
+    args_autocomplete = {name: autocomplete_mock}
+
+    definition = {
+        "parameters": [
+            {
+                "in": "path",
+                "name": name,
+                "description": description,
+            },
+            {"in": "no-query"},
+        ]
+    }
+
+    result = OpenAPICommandFactory._get_args(None, definition, args_autocomplete)
+
+    assert len(result) == 1
+
+    argument, *_ = result
+
+    assert argument.name == name
+    assert argument.help == description
+    assert argument.autocomplete == autocomplete_mock
 

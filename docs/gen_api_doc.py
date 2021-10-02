@@ -5,6 +5,10 @@ import mkdocs_gen_files
 src_root = Path("camundactl")
 api_doc_tree = []
 for path in src_root.glob("**/*.py"):
+
+    if path.name.endswith("_test.py"):
+        continue
+
     doc_path = Path("api_doc", path.relative_to(src_root)).with_suffix(".md")
 
     with mkdocs_gen_files.open(doc_path, "w") as f:
