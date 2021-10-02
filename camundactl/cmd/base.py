@@ -1,6 +1,7 @@
 import importlib
 import logging
-from typing import List, Optional, Union
+from functools import cache
+from typing import Mapping, Optional
 
 import click
 
@@ -13,27 +14,36 @@ except ImportError:
     from logging import StreamHandler as DefaultLogHandler
 
 
+LookupDict = Mapping[str, str]
+
+
 class AliasGroup(click.Group):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    @cache
+    def get_alias_lookup(self) -> LookupDict:
+        return load_config().get("alias", {})
+
     def get_command(self, ctx: click.Context, cmd_name: str) -> Optional[click.Command]:
-        cmd = super().get_command(ctx, cmd_name)
-        if cmd is not None:
+        """
+        override default with the functionalitity
+        to lookup for aliases
+        """
+        if cmd := super().get_command(ctx, cmd_name):
             return cmd
+        alias_lookup = self.get_alias_lookup()
+        if alias_name := alias_lookup.get(cmd_name):
+            if cmd := super().get_command(ctx, alias_name):
+                return cmd
         for cmd_other_name in self.list_commands(ctx):
             cmd = super().get_command(ctx, cmd_other_name)
-            alias = getattr(cmd, "alias", None)
-            if alias is None:
-                continue
-            if isinstance(alias, list) and cmd_name in alias:
-                return cmd
-            if isinstance(alias, str) and cmd_name == alias:
-                return cmd
+            if alias := getattr(cmd, "alias", None):
+                if isinstance(alias, list) and cmd_name in alias:
+                    return cmd
+                if isinstance(alias, str) and cmd_name == alias:
+                    return cmd
         return None
-
-
-class AliasCommand(click.MultiCommand):
-    def __init__(self, *args, alias: Union[str, List[str]], **kwargs):
-        super().__init__(*args, **kwargs)
-        self.alias = alias
 
 
 @click.group(cls=AliasGroup)
@@ -134,10 +144,9 @@ def autodiscover(paths):
         importlib.import_module(path)
 
 
+# from camundactl.cmd import openapi  # noqa
 from camundactl.cmd import config  # noqa
-from camundactl.cmd import openapi  # noqa
-
-# from camundactl.cmd import info  # noqa
+from camundactl.cmd import info  # noqa
 from camundactl.cmd import process_instance  # noqa
 
 # import custom modules and overrides

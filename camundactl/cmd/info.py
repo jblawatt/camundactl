@@ -24,10 +24,10 @@ OpenAPI:
     Description: {{openapi.info.description}}
     Version:     {{openapi.info.version}}
 
-Engines:{% for engine in config.engines %}
+Engines: {% if config.engines %}{% for engine in config.engines %}
     - Name: {{engine.name}}
       URL: {{engine.url}}
-      Version: {{ camunda_engine_version(engine) }}{% endfor %}
+      Version: {{ camunda_engine_version(engine) }}{% endfor %}{% else %}-{% endif %}
 
 Extra Paths: {%if config.extra_path %}{% for ep in config.extra_paths %}
     - {{ep}} {% endfor %}{% else %}-{% endif %}

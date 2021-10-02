@@ -2,31 +2,26 @@ from typing import Optional
 
 import click
 
-from camundactl.cmd.base import root
+from camundactl.cmd.base import AliasGroup, root
 from camundactl.cmd.helpers import with_exception_handler
 from camundactl.config import activate_engine, add_engine, load_config, remove_engine
 
 
-@root.group("config")
-def config():
+@root.group("config", cls=AliasGroup, help="change engines configuration")
+def config_cmd():
     pass
 
 
-@config.group("engines")
-def engines():
-    pass
-
-
-@engines.command("ls")
+@config_cmd.command("get-engines")
 @with_exception_handler()
-def list_():
+def get_engines():
     context = load_config()
     for engine in context["engines"]:
         is_current = engine["name"] == context.get("current_engine")
         print(engine["name"] + (" *" if is_current else ""))
 
 
-@engines.command("add")
+@config_cmd.command("add-engine")
 @click.argument("name")
 @click.argument("url")
 @click.option(
@@ -53,7 +48,7 @@ def list_():
     "--no-verify", "no_verify", default=False, required=False, help="do not verify ssl"
 )
 @with_exception_handler()
-def add(
+def add_engine(
     name: str,
     url: str,
     user: Optional[str],
@@ -68,14 +63,14 @@ def add(
     add_engine(new_engine, select)
 
 
-@engines.command("remove")
+@config_cmd.command("remove-engine")
 @click.argument("name")
 @with_exception_handler()
 def remove(name: str):
     remove_engine(name)
 
 
-@engines.command("activate")
+@config_cmd.command("activate-engine")
 @click.argument("name")
 @with_exception_handler()
 def activate(name: str):

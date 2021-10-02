@@ -19,6 +19,9 @@ def set_current_output(output_handlers, output):
 def with_output(*wrappers: OutputHandler, default: Optional[str] = None):
     def inner(func):
 
+        if not wrappers:
+            raise Exception("there must be at least one output handler")
+
         output_lookup = dict((oh.name, oh) for oh in wrappers)
 
         func = click.option(
@@ -35,7 +38,11 @@ def with_output(*wrappers: OutputHandler, default: Optional[str] = None):
         @functools.wraps(func)
         def wrapper(*args, output, **kwargs):
             if output not in output_lookup:
-                raise click.ClickException("invalid output '%s'" % output)
+                raise click.ClickException(
+                    "Invalid output '%s'. "
+                    "Has to be one of: %s"
+                    % (output, ", ".join(oh.name for oh in wrappers))
+                )
             with set_current_output(wrappers, output):
                 return func(*args, **kwargs)
 

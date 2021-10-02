@@ -3,7 +3,6 @@ from importlib.resources import open_text
 
 from camundactl.cmd.openapi.factory import OpenAPICommandFactory
 
-
 __all__ = ["command_factory"]
 
 

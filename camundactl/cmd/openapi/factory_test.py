@@ -1,12 +1,14 @@
 from typing import Type
-from .factory import OpenAPICommandFactory, generic_autocomplete
 from unittest import TestCase
 from unittest.mock import Mock, patch
 from uuid import uuid4
-from requests.exceptions import HTTPError
+
+import click
 import pytest
 import responses
-import click
+from requests.exceptions import HTTPError
+
+from .factory import OpenAPICommandFactory, OpenAPIDict, generic_autocomplete
 
 
 @patch("camundactl.cmd.openapi.factory._create_client")
@@ -162,3 +164,25 @@ def test_openapi_command_factory_get_args():
     assert argument.help == description
     assert argument.autocomplete == autocomplete_mock
 
+
+def test_openapi_command_factory_get_operation_definition() -> None:
+    test_operation_id = "test-op-id"
+    test_method = "get"
+    test_operation = {"operationId": test_operation_id}
+    test_method_operation = {test_method: test_operation}
+    test_path = "/path"
+    openapi_test = {"paths": {test_path: test_method_operation}}
+    f = OpenAPICommandFactory(openapi_test)
+
+    res_path, res_op = f._get_operation_definition(test_operation_id, test_method)
+
+    assert test_path == res_path
+    assert test_operation == res_op
+
+
+def test_openapi_command_factory_get_operation_definition_not_found() -> None:
+    openapi_test = {"paths": []}
+    f = OpenAPICommandFactory(openapi_test)
+
+    with pytest.raises(Exception):
+        res_path, res_op = f._get_operation_definition("not-exists", "get")

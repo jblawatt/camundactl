@@ -11,6 +11,11 @@ class OutputHandler:
         self.current_output = output
 
     def apply(self, func: Callable) -> Callable:
+        """
+        applies the output options to the call
+        funcs and returns a call wrapper which
+        handles the output if it is activated.
+        """
 
         for option in self.options.values():
             func = option(func)

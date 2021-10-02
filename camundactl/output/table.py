@@ -84,18 +84,20 @@ class TableOutputHandler(OutputHandler):
                 [_ensure_length(row[key], cell_max_length) for key in headers]
                 for row in result
             ]
-        elif isinstance(headers, dict):
-            result = [
-                [_ensure_length(row[key], cell_max_length) for key in headers.values()]
-                for row in result
-            ]
-            headers = headers.keys()
+        else:
+            raise Exception(
+                f"invalid header format type={type(self.headers)}"
+                f", values={self.headers}"
+            )
         click.echo(tabulate(result, headers=headers))
 
 
 class ObjectTableOutputHandler(TableOutputHandler):
     def handle(
-        self, result: List[Any], output_headers: Optional[str], output_cell_max_length
+        self,
+        result: dict[str, Any],
+        output_headers: Optional[str],
+        output_cell_max_length,
     ):
 
         headers = "key,value"

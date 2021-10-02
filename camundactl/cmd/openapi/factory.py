@@ -1,10 +1,10 @@
 import json
+import logging
 from functools import lru_cache, partial
 from http import HTTPStatus
 from typing import Callable, Dict, List, Optional, Tuple, TypedDict
 from unittest.case import expectedFailure
 
-import logging
 import click
 import jsonschema
 import yaml
@@ -29,7 +29,6 @@ from camundactl.output import (
 )
 from camundactl.output.base import OutputHandler
 from camundactl.output.decorator import with_output
-
 
 logger = logging.getLogger(__name__)
 
@@ -68,12 +67,16 @@ task_id_autocomplete = partial(
 )
 
 
-class OpenAPIDict(TypedDict):
-    pass
-
-
 class OpenAPIOperationDict(TypedDict):
     pass
+
+
+APIPath = str
+
+
+class OpenAPIDict(TypedDict):
+    version: dict[str, str]
+    paths: dict[APIPath, OpenAPIOperationDict]
 
 
 class OpenAPICommandFactory(object):
@@ -83,7 +86,7 @@ class OpenAPICommandFactory(object):
     @lru_cache
     def _get_operation_definition(
         self, operation_id: str, method: str
-    ) -> OpenAPIOperationDict:
+    ) -> tuple[str, OpenAPIOperationDict]:
         for path, path_definition in self.openapi["paths"].items():
             definition = path_definition.get(method)
             if definition is None:

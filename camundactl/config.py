@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import List, Literal, Optional, TypedDict, cast
+from typing import List, Literal, Mapping, Optional, TypedDict, cast
 
 import click
 import yaml
@@ -20,12 +20,16 @@ class EngineDict(TypedDict):
     verify: bool
 
 
+CommandAliasLookup = Mapping[str, str]
+
+
 class ConfigDict(TypedDict):
     version: str
     current_engine: Optional[str]
     engines: List[EngineDict]
     extra_paths: Optional[List[str]]
     log_level: Optional[Literal["DEBUG", "INFO", "WARNING", "ERROR"]]
+    alias: Optional[CommandAliasLookup]
 
 
 CAMUNDA_CONFIG_FILE = "config"
@@ -85,7 +89,7 @@ def remove_engine(name: str) -> None:
     _write_context(config)
 
 
-def activate_engine(name: str):
+def activate_engine(name: str) -> None:
     context = load_config()
     engine_names = list(pluck("name", context["engines"]))
     if name not in engine_names:
