@@ -42,6 +42,7 @@ responses = "^0.14.0"
 pytest-cov = "^2.12.1"
 coverage = "^5.5"
 ipdb = "^0.13.9"
+mkdocs-click = "^0.4.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

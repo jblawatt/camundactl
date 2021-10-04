@@ -1,5 +1,6 @@
-from .base import OutputHandler
 from unittest.mock import Mock
+
+from .base import OutputHandler
 
 
 def test_outputhandler():

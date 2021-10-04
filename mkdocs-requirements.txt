@@ -25,3 +25,4 @@ mkdocstrings
 plantuml-markdown
 mkdocs-gen-files
 mkdocs-gitbook
+mkdocs-click

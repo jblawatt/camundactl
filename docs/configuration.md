@@ -1,8 +1,5 @@
 # Configuration
 
-[TOC]
-
-
 `cctl` uses a config file. The locations differ from os. If the configuration file does not it exists, it becomes created.
 
 - MacOS: `$HOME/Libarary/Application Support/camundactl/config.yml`
@@ -48,7 +45,6 @@ engines:
   - `auth` is an object of `user` and `password` for basic authentication
   - `verify` is a boolen that ignores ssl verification (default `true`)
 
-
 ## Engines
 
 ### Add engine
@@ -90,5 +86,26 @@ $ cctl config engines remove client-a
 TODO
 
 ## Extra Paths
+
+TODO
+
+## Alias
+
+You can modify config file and add alias names for subcommand.
+
+```yaml
+alias:
+  pi: processInstance
+  pis: processInstances
+  hpi: historicProcessInstance
+  hpis: historicProcessinstances
+  i: incident
+  is: incidents
+  deploy: deployment
+  desc: describe
+  g: get
+```
+
+## Templates
 
 TODO

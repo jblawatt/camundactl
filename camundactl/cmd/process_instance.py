@@ -25,13 +25,16 @@ Incidents: {% for inc in incidents %}
       Type:       {{inc.incidentType}}
       IsOpen:     {{inc.open}}
       ActivityId: {{inc.activityId}}
+      Timestamp:  {{inc.incidentTimestamp}}
       Message:    {{inc.incidentMessage}} {% endfor %}
 
 Variables: {% for var in variables%}
-    - Id:    {{var.id}}
-      Name:  {{var.name}}
-      Type:  {{var.type}}
-      Value: {{var.value}}
+    - Id:         {{var.id}}
+      Name:       {{var.name}}
+      Type:       {{var.type}}
+      CreateTime: {{var.createTime}}
+      Value:
+        {{var.value}}
       {% endfor %}
 """
 
@@ -59,13 +62,16 @@ Incidents: {% for inc in incidents %}
       Type:       {{inc.incidentType}}
       IsOpen:     {{inc.open}}
       ActivityId: {{inc.activityId}}
+      Timestamp:  {{inc.incidentTimestamp}}
       Message:    {{inc.incidentMessage}} {% endfor %}
 
 Variables: {% for var in variables%}
-    - Id:    {{var.id}}
-      Name:  {{var.name}}
-      Type:  {{var.type}}
-      Value: {{var.value}}
+    - Id:         {{var.id}}
+      Name:       {{var.name}}
+      Type:       {{var.type}}
+      CreateTime: {{var.createTime}}
+      Value:
+        {{var.value}}
       {% endfor %}
 """.strip()
 

@@ -1,7 +1,5 @@
 # Output
 
-[TOC]
-
 ## `output` Option
 
 The `-o/--output` option defines the output format. The default ist `table`. All other options are described in the following.

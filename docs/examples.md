@@ -1,11 +1,10 @@
 # Examples
 
-[TOC]
-
 ## Filter result
+
 Load two active process instances and use only the columns id and suspended
 
-```shell
+```zsh
 $ cctl get processInstances --max-results 2 -o table -oH id,suspended
 id                                    suspended
 ------------------------------------  -----------
@@ -13,8 +12,8 @@ id                                    suspended
 003248e7-0b05-11ec-990f-0242ac12000d  False
 ```
 
-
 ## Use template for output
+
 Load all active process instances and use the result in a jinja2 template.
 
 ```bash
@@ -23,6 +22,7 @@ $  cctl get processInstances -o template -oT '{{result|length}}'
 ```
 
 ## Apply jsonpath to result
+
 Load five active process instances and apply jsonpath formatting.
 
 ```bash
@@ -35,10 +35,14 @@ $ cctl get processInstances -o jsonpath -oJ '$.[*].id' --max-results 5
 ```
 
 ## Limited JSON output
+
 Load only one active process instance and ouput as json.
 
 ```bash
 $ cctl get processInstances -o json --max-results 1
+```
+
+```json
 [
   {
     "links": [],
@@ -54,6 +58,7 @@ $ cctl get processInstances -o json --max-results 1
 ```
 
 ## Piping commands
+
 Pipe commands together. Get all active process instances by process defintion and delete them:
 
 ```bash

@@ -2,9 +2,18 @@ from typing import Optional
 
 import click
 
+from tabulate import tabulate
 from camundactl.cmd.base import AliasGroup, root
 from camundactl.cmd.helpers import with_exception_handler
-from camundactl.config import activate_engine, add_engine, load_config, remove_engine
+from camundactl.config import (
+    activate_engine,
+    add_alias,
+    add_engine,
+    get_alias,
+    load_config,
+    remove_alias,
+    remove_engine,
+)
 
 
 @root.group("config", cls=AliasGroup, help="change engines configuration")
@@ -75,3 +84,35 @@ def remove(name: str):
 @with_exception_handler()
 def activate(name: str):
     activate_engine(name)
+
+
+@config_cmd.command("get-alias")
+@with_exception_handler()
+def get_alias_cmd():
+    click.echo(tabulate(get_alias().items(), headers=("Alias", "Command")))
+
+
+@config_cmd.command("add-alias")
+@click.argument("command")
+@click.argument("alias")
+@with_exception_handler()
+def add_alias_cmd(alias: str, command: str) -> None:
+    add_alias(alias, command)
+
+
+def _alias_shell_complete(ctx: click.Context, param: str, incomplete: str) -> list[str]:
+    result: list[str] = []
+    for alias in load_config().get("alias", {}).keys():
+        if incomplete:
+            if alias.startswith(incomplete):
+                result.append(alias)
+        else:
+            result.append(alias)
+    return result
+
+
+@config_cmd.command("remove-alias")
+@click.argument("alias", autocompletion=_alias_shell_complete)
+@with_exception_handler()
+def remove_alias_cmd(alias: str) -> None:
+    remove_alias(alias)

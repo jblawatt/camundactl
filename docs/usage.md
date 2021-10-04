@@ -1,7 +1,5 @@
 # Usage
 
-[TOC]
-
 ## `get` Resource Information
 
 Get commands provides the ability to request ressource information from a given engine. It contains all OpenAPI Operations of the Verb `get`.
@@ -36,16 +34,19 @@ To skip this use the option `--skip-validation`.
 
 _not quite implemented_. It's planned to use this commands to collect and output complex informationations about a given ressoure including combining multiple endpoints (e.g. process instances with all occured incidents and variable information.)
 
-
 ## Autocomplete
 
 `cctl` uses [click](https://click.palletsprojects.com/) which brings a buildin
 autocomplte feature. Have a look at their [shell completion documentation](https://click.palletsprojects.com/en/8.0.x/shell-completion/).
 
-*`zsh` Example*
+_`zsh` Example_
+
 ```bash
 \_CCTL_COMPLETE=zsh_source cctl
 ```
+
 ## Others
+
 ### Info
+
 ### Version

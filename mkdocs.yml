@@ -12,14 +12,24 @@ nav:
       - Configuration: configuration.md
       - Usage: usage.md
       - Output: output.md
+      - Full Reference:
+          - get Commands: commands/get.md
+          - apply Commands: commands/apply.md
+          - delete Commands: commands/delete.md
+          - describe Commands: commands/describe.md
+          - Other Commands: commands/others.md
   - API Doc: api_doc.md
 
 # https://python-markdown.github.io/extensions/
 markdown_extensions:
+  - attr_list
+  - mkdocs-click
   - toc:
       permalink: True
   - plantuml_markdown:
       server: http://www.plantuml.com/plantuml
+  - pymdownx.highlight
+  - pymdownx.superfences
 
 plugins:
   - search
@@ -31,6 +41,9 @@ plugins:
         - docs/gen_api_doc.py
 
 theme:
-  name: readthedocs
+  name: material
   locale: en
   hightlightjs: true
+  palette:
+    primary: deep orange
+    accent: deep orange

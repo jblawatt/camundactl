@@ -1,8 +1,9 @@
-import pytest
 from typing import Any
 from unittest.mock import Mock, patch
 
+import pytest
 from requests.sessions import default_headers
+
 from .table import ObjectTableOutputHandler, TableOutputHandler, _ensure_length
 
 

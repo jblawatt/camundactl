@@ -1,11 +1,15 @@
+import logging
 from pathlib import Path
-from typing import List, Literal, Mapping, Optional, TypedDict, cast
+from typing import List, Literal, Optional, TypedDict, cast
 
 import click
 import yaml
 from toolz import pluck
 
 APP_NAME = "camundactl"
+
+
+logger = logging.getLogger(__name__)
 
 
 class ContextAuthDict(TypedDict):
@@ -20,7 +24,7 @@ class EngineDict(TypedDict):
     verify: bool
 
 
-CommandAliasLookup = Mapping[str, str]
+CommandAliasLookup = dict[str, str]
 
 
 class ConfigDict(TypedDict):
@@ -36,7 +40,12 @@ CAMUNDA_CONFIG_FILE = "config"
 
 
 NEW_CONTEXT_TEMPATE = ConfigDict(
-    version="beta1", current_engine=None, engines=[], log_level="ERROR", extra_paths=[]
+    version="beta1",
+    current_engine=None,
+    engines=[],
+    log_level="ERROR",
+    extra_paths=[],
+    alias={},
 )
 
 
@@ -45,7 +54,7 @@ def _get_configfile() -> Path:
     return Path(app_dir) / "config.yml"
 
 
-def _write_context(config: ConfigDict) -> None:
+def _write_config(config: ConfigDict) -> None:
     config_file = _get_configfile()
     with open(config_file, "w") as fh:
         yaml.dump(config, fh)
@@ -56,7 +65,7 @@ def _ensure_configfile() -> None:
     if not config_file.exists():
         app_dir = Path(click.get_app_dir(APP_NAME))
         app_dir.mkdir(parents=True, exist_ok=True)
-        _write_context(NEW_CONTEXT_TEMPATE)
+        _write_config(NEW_CONTEXT_TEMPATE)
 
 
 def load_config() -> ConfigDict:
@@ -75,7 +84,7 @@ def add_engine(engine: EngineDict, select: bool = False) -> None:
     if select:
         config["current_engine"] = engine["name"]
 
-    _write_context(config)
+    _write_config(config)
 
 
 def remove_engine(name: str) -> None:
@@ -86,18 +95,45 @@ def remove_engine(name: str) -> None:
     if config["current_engine"] == name:
         config["current_engine"] = None
 
-    _write_context(config)
+    _write_config(config)
 
 
 def activate_engine(name: str) -> None:
-    context = load_config()
-    engine_names = list(pluck("name", context["engines"]))
+    config = load_config()
+    engine_names = list(pluck("name", config["engines"]))
     if name not in engine_names:
         raise Exception(
             "invalid engine name '%s'. choose one of %s."
             % (name, ", ".join(engine_names))
         )
 
-    context["current_engine"] = name
+    config["current_engine"] = name
 
-    _write_context(context)
+    _write_config(config)
+
+
+def add_alias(alias: str, command: str) -> None:
+    config = load_config()
+    if "alias" not in config or config["alias"] is None:
+        config["alias"] = {}
+    config["alias"][alias] = command
+    _write_config(config)
+    logger.info("added alias %s for command %s", alias, command)
+
+
+def remove_alias(alias: str) -> None:
+    config = load_config()
+    if "alias" not in config or config["alias"] is None:
+        config["alias"] = {}
+    try:
+        del config["alias"][alias]
+    except KeyError:
+        logger.warning("alias %s should be deleted. but does not exist.", alias)
+    else:
+        logger.info("deleted alias %s", alias)
+    _write_config(config)
+
+
+def get_alias() -> dict[str, str]:
+    config = load_config()
+    return config.get("alias", {})

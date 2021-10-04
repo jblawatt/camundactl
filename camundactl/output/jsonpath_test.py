@@ -1,5 +1,6 @@
+from unittest.mock import Mock, patch
+
 from .jsonpath import JSONPathOutputHandler
-from unittest.mock import patch, Mock
 
 
 @patch("camundactl.output.jsonpath.click")
