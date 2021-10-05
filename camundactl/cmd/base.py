@@ -147,9 +147,6 @@ def autodiscover(paths):
 from camundactl.cmd import config  # noqa
 from camundactl.cmd import info  # noqa
 from camundactl.cmd import openapi  # noqa
-
-# TODO: with specifix openapi version
-openapi.load()
 from camundactl.cmd import process_instance  # noqa
 
 # import custom modules and overrides

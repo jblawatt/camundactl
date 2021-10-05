@@ -1,8 +1,14 @@
 # Examples
 
-## Filter result
+## Limit resultset
 
-Load two active process instances and use only the columns id and suspended
+Sometime `get` prints to much information for a single result. Per default all
+keys of the server json become printed. If you would like limt the output you
+can use `-o table` ensuring table output, combinted with the
+`-oT/--output-headers` option and provide the columns.
+
+Beside that, most endpoints provide a `--max-limit` and `--first-result` option
+to paginate or limit the result set.
 
 ```zsh
 $ cctl get processInstances --max-results 2 -o table -oH id,suspended
@@ -12,18 +18,25 @@ id                                    suspended
 003248e7-0b05-11ec-990f-0242ac12000d  False
 ```
 
-## Use template for output
+## Use template output to print result count
 
-Load all active process instances and use the result in a jinja2 template.
+The `--ouput/-o template` option gives you the option to provide a output Template (jinja2)
+which gets the resultset as context variable. All [jinja2 builtins](https://jinja.palletsprojects.com/en/3.0.x/templates/)
+can be used.
+
+Here we just output the result length.
 
 ```bash
 $  cctl get processInstances -o template -oT '{{result|length}}'
 1337
 ```
 
-## Apply jsonpath to result
+## Get processInstanceIds only with jsonpath
 
-Load five active process instances and apply jsonpath formatting.
+Sometime you just need the processInstanceId i.e. to pipe it into another
+command. The can be reached with a `-o/--ouput jsonpath` option and providing
+a jsonpath query which will be applied on the resultset. (For jsonpath whe
+utilize [jsonpath-ng](https://github.com/h2non/jsonpath-ng) under the hood.)
 
 ```bash
 $ cctl get processInstances -o jsonpath -oJ '$.[*].id' --max-results 5

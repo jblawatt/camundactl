@@ -382,7 +382,7 @@ class OpenAPICommandFactory(object):
                 result["id"] = incidents_autocomplete
         return result
 
-    def create_get_commands(self):
+    def create_get_commands(self) -> None:
         for _, path in self.openapi["paths"].items():
             get_operation = path.get("get")
             if not get_operation:
@@ -392,7 +392,7 @@ class OpenAPICommandFactory(object):
                 operation_id=get_operation["operationId"],
             )
 
-    def create_delete_commands(self):
+    def create_delete_commands(self) -> None:
         for _, path in self.openapi["paths"].items():
             delete_operation = path.get("delete")
             if not delete_operation:
@@ -402,7 +402,7 @@ class OpenAPICommandFactory(object):
                 operation_id=delete_operation["operationId"],
             )
 
-    def create_apply_commands(self):
+    def create_apply_commands(self) -> None:
         for url, path in self.openapi["paths"].items():
             for method, operation in path.items():
                 if method not in ("put", "post"):
