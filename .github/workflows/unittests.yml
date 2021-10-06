@@ -1,5 +1,5 @@
 name: Run unittests
-on: [push]
+on: push
 
 jobs:
   build:
@@ -14,10 +14,9 @@ jobs:
           python-version: '3.x'
       - name: Install Dependencies
         run: |
-          python -m pip install poetry
+          python -m pip install poetry pytest
           python -m poetry export -f requirements.txt --without-hashes --dev > requirements.txt
           python -m pip install -r requirements.txt
-          python -m pip install pytest
       - name: Run Tests
         run: |
            pytest --cov=camundactl .
