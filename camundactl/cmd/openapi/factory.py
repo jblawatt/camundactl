@@ -1,17 +1,15 @@
 import json
 import logging
-from functools import lru_cache, partial
-from http import HTTPStatus
+from functools import partial
 from typing import Callable, Dict, List, Optional, Tuple, TypedDict
-from unittest.case import expectedFailure
 
 import click
 import jsonschema
 import yaml
-from toolz import first, second
+from toolz import first
 
 from camundactl.client import Client
-from camundactl.cmd.base import _create_client, apply, delete, get
+from camundactl.cmd.base import apply, delete, get, prepare_context
 from camundactl.cmd.helpers import (
     ArgumentTuple,
     OptionTuple,
@@ -36,7 +34,7 @@ logger = logging.getLogger(__name__)
 def generic_autocomplete(
     ctx: click.Context, param: str, incomplete: str, endpoint: str
 ) -> List[str]:
-    _create_client(ctx)
+    prepare_context(ctx)
     client: Client = ctx.obj["client"]
     resp = client.get(endpoint)
     try:
@@ -68,7 +66,7 @@ task_id_autocomplete = partial(
 
 
 class OpenAPIOperationDict(TypedDict):
-    pass
+    description: str
 
 
 APIPath = str
@@ -82,29 +80,40 @@ class OpenAPIDict(TypedDict):
 class OpenAPICommandFactory(object):
     def __init__(self, openapi: OpenAPIDict):
         self.openapi = openapi
+        self._definition_cache = {}
 
-    @lru_cache
+    def _build_operation_id_cache(self) -> dict:
+        cache = dict()
+        for path, path_definition in self.openapi["paths"].items():
+            for method, definition in path_definition.items():
+                operation_id = definition["operationId"]
+                cache[operation_id] = {
+                    "path": path,
+                    "method": method,
+                    "definition": definition,
+                }
+        return cache
+
     def _get_operation_definition(
         self, operation_id: str, method: str
     ) -> tuple[str, OpenAPIOperationDict]:
-        for path, path_definition in self.openapi["paths"].items():
-            definition = path_definition.get(method)
-            if definition is None:
-                continue
-            if definition["operationId"] == operation_id:
-                # got it
-                break
-        else:
+
+        if not self._definition_cache:
+            self._definition_cache = self._build_operation_id_cache()
+
+        try:
+            item = self._definition_cache[operation_id]
+        except KeyError:
             raise Exception("invalid operation id " + operation_id)
-        return path, definition
+        return item["path"], item["definition"]
 
     def _create_command_name(self, definition) -> str:
         operation = definition["operationId"]
         for value in ("get", "delete", "resolve", "update", "set"):
             if operation.startswith(value) and operation != value:
                 operation = operation[len(value) :]
-                operation = operation[0].lower() + operation[1:]
-                return operation
+                break
+        operation = operation[0].lower() + operation[1:]
         return operation
 
     def _get_options(self, definition, options_autocomplete) -> List[OptionTuple]:
@@ -152,29 +161,36 @@ class OpenAPICommandFactory(object):
         options_autocomplete: Optional[Dict[str, Callable]],
     ):
         path, definition = self._get_operation_definition(operation_id, method)
+        schema = self._get_opration_request_schema_name(operation_id, method)
         command_name = self._create_command_name(definition)
-        command_desc = "\n".join((definition["description"], "", f"URL: {path}"))
+        command_desc = "\n".join(
+            (
+                definition["description"],
+                "",
+                f"URL: `{path}`",
+                "",
+                f"Schema: `{schema or '-'}`",
+            )
+        )
 
         options = self._get_options(definition, options_autocomplete)
         args = self._get_args(definition, args_autocomplete)
 
-        @with_output(*output_handlers)
-        @with_query_option_factory(options=options, name="options")
-        @with_args_factory(args=args, name="args")
-        @with_exception_handler()
-        @click.pass_context
-        def inner(*args, **kwargs):
-            return command(*args, **kwargs)
+        command = with_output(*output_handlers)(command)
+        command = with_query_option_factory(options=options, name="options")(command)
+        command = with_args_factory(args=args, name="args")(command)
+        command = with_exception_handler()(command)
+        command = click.pass_context(command)
 
-        parent.command(command_name, help=command_desc)(inner)
+        parent.command(command_name, help=command_desc)(command)
 
     def _has_list_response(
         self, definition: OpenAPIOperationDict, status_code: str = "200"
     ) -> bool:
         try:
-            schema = definition["responses"]["200"]["content"]["application/json"][
-                "schema"
-            ]
+            schema = definition["responses"][status_code]["content"][
+                "application/json"
+            ]["schema"]
         except KeyError:
             return True
         else:
@@ -228,9 +244,9 @@ class OpenAPICommandFactory(object):
     ):
         path, definition = self._get_operation_definition(operation_id, "delete")
 
-        def command(ctx: click.Context, params: Dict, args: Dict):
+        def command(ctx: click.Context, options: Dict, args: Dict):
             client: Client = ctx.obj["client"]
-            resp = client.delete(path.format(**args), params=params)
+            resp = client.delete(path.format(**args), params=options)
             resp.raise_for_status()
 
         self.create_command(
@@ -258,6 +274,20 @@ class OpenAPICommandFactory(object):
         else:
             __, __, schema_name = schema_ref.strip("#").strip("/").split("/")
             return self.openapi["components"]["schemas"][schema_name]
+
+    def _get_opration_request_schema_name(self, operation_id: str, method: str) -> str:
+        _, definition = self._get_operation_definition(operation_id, method)
+
+        # just in two parts to better read it
+        try:
+            content = definition["requestBody"]["content"]
+            schema_ref = content["application/json"]["schema"]["$ref"]
+        except KeyError:
+            # no schema
+            return None
+        else:
+            __, __, schema_name = schema_ref.strip("#").strip("/").split("/")
+            return schema_name
 
     def create_apply_command(
         self,
@@ -300,7 +330,7 @@ class OpenAPICommandFactory(object):
         )
         def command(
             ctx: click.Context,
-            params: Dict,
+            options: Dict,
             args: Dict,
             skip_validation: bool,
             json_input,
@@ -327,7 +357,7 @@ class OpenAPICommandFactory(object):
 
             extra["headers"] = {"Content-Type": "application/json"}
 
-            resp = getattr(client, method)(path.format(**args), params=params, **extra)
+            resp = getattr(client, method)(path.format(**args), params=options, **extra)
             try:
                 resp.raise_for_status()
             except Exception:

@@ -1,9 +1,12 @@
 import os
 
-from camundactl.cmd.base import root
+from camundactl.cmd.base import init, root
 
 
 def _main():
+
+    init()
+
     if "CCTL_PROFILE" in os.environ:
         filename = os.getenv("CCTL_PROFILE")
         import cProfile

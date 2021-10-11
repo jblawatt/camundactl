@@ -1,8 +1,27 @@
 # Examples
 
+
+## Get all active process instances
+
+The easiest way to get all active process instances is to use the following
+command:
+
+```shell
+$ cctl get processInstances
+```
+
+## Get all active process instances of a specific process definition
+
+To filter the result, each command provides all REST API filter options for the
+command line. So you can specify the `processDefintionId` to search for.
+
+```shell
+$ cctl get processInstances --process-definition-id f87b25ce-0577-11ec-8801-0242ac12000a
+```
+
 ## Limit resultset
 
-Sometime `get` prints to much information for a single result. Per default all
+Sometimes `get` prints to much information for a single result. Per default all
 keys of the server json become printed. If you would like limt the output you
 can use `-o table` ensuring table output, combinted with the
 `-oT/--output-headers` option and provide the columns.
@@ -10,7 +29,7 @@ can use `-o table` ensuring table output, combinted with the
 Beside that, most endpoints provide a `--max-limit` and `--first-result` option
 to paginate or limit the result set.
 
-```zsh
+```shell
 $ cctl get processInstances --max-results 2 -o table -oH id,suspended
 id                                    suspended
 ------------------------------------  -----------

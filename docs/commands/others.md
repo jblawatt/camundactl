@@ -10,6 +10,15 @@
     :depth: 2
     :style: table
 
+## Schema
+
+::: mkdocs-click
+    :module: camundactl.cmd.openapi.schema
+    :command: schema
+    :prog_name: cctl&nbsp;schema
+    :depth: 2
+    :style: table
+
 ## Info
 
 ::: mkdocs-click

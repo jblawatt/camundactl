@@ -1,11 +1,11 @@
 import importlib
 import logging
-from functools import cache
+import sys
 from typing import Mapping, Optional
 
 import click
 
-from camundactl.client import Client, create_session
+from camundactl.client import create_client
 from camundactl.config import ConfigDict, load_config
 
 try:
@@ -14,6 +14,8 @@ except ImportError:
     from logging import StreamHandler as DefaultLogHandler
 
 
+logger = logging.getLogger(__name__)
+
 LookupDict = Mapping[str, str]
 
 
@@ -21,7 +23,6 @@ class AliasGroup(click.Group):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-    @cache
     def get_alias_lookup(self) -> LookupDict:
         return load_config().get("alias", {})
 
@@ -60,8 +61,6 @@ def root(ctx: click.Context, log_level: Optional[str] = None) -> None:
     ctx.ensure_object(dict)
     config_ = load_config()
     if log_level or (log_level := config_.get("log_level", "")):
-        import sys
-
         logging.basicConfig(
             level=getattr(logging, log_level), handlers=[DefaultLogHandler(sys.stdout)]
         )
@@ -72,31 +71,17 @@ def _group_factory(parent, parent_kwargs):
     @click.pass_context
     @click.option("-e", "--engine", "engine", required=False)
     def group(ctx: click.Context, engine: Optional[str]):
-        config_ = load_config()
-        engine = engine or config_.get("current_engine")
-        logging.debug("using engine %s", engine)
-        client = _create_client(config_, engine)
-        ctx.obj["client"] = client
-        ctx.obj["config"] = config
+        prepare_context(ctx, engine=engine)
 
     return group
 
 
-def _create_client(config_: ConfigDict, selected_engine: Optional[str] = None):
-
-    if not config_["engines"]:
-        raise Exception("invalid configuration")
-
-    if selected_engine is None:
-        selected_engine = config_.get("current_engine")
-        if not selected_engine:
-            raise Exception("no current and no given engine")
-
-    for engine in config_["engines"]:
-        if selected_engine == engine["name"]:
-            return Client(create_session(engine), engine["url"])
-    else:
-        raise Exception(f"no engine with name: {selected_engine}")
+def prepare_context(ctx: click.Context, engine: Optional[str] = None) -> None:
+    """builds up the context with config and client instance"""
+    ctx.ensure_object(dict)
+    config_ = load_config()
+    ctx.obj["config"] = config_
+    ctx.obj["client"] = create_client(config_, selected_engine=engine)
 
 
 get = _group_factory(
@@ -139,15 +124,22 @@ apply = _group_factory(
 )
 
 
-def autodiscover(paths):
-    for path in paths:
+def init():
+    for module_name in (
+        "camundactl.cmd.config",
+        "camundactl.cmd.info",
+        "camundactl.cmd.openapi",
+        "camundactl.cmd.openapi.schema",
+        "camundactl.cmd.process_instance",
+    ):
+        module = importlib.import_module(module_name)
+        if hasattr(module, "register_commands"):
+            module.register_commands()
+
+    # import custom modules and overrides
+    config_ = load_config()
+    for path in config_.get("extra_paths", []):
         importlib.import_module(path)
 
 
-from camundactl.cmd import config  # noqa
-from camundactl.cmd import info  # noqa
-from camundactl.cmd import openapi  # noqa
-from camundactl.cmd import process_instance  # noqa
-
-# import custom modules and overrides
-autodiscover(load_config().get("extra_paths", []))
+init()

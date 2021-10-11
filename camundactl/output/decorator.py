@@ -8,7 +8,7 @@ from camundactl.output.base import OutputHandler
 
 
 @contextmanager
-def set_current_output(output_handlers, output):
+def set_current_output(output_handlers: list[OutputHandler], output: str):
     for w in output_handlers:
         w.set_current_output(output)
     yield

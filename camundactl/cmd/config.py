@@ -1,8 +1,8 @@
 from typing import Optional
 
 import click
-
 from tabulate import tabulate
+
 from camundactl.cmd.base import AliasGroup, root
 from camundactl.cmd.helpers import with_exception_handler
 from camundactl.config import (
@@ -10,6 +10,7 @@ from camundactl.config import (
     add_alias,
     add_engine,
     get_alias,
+    get_configfile,
     load_config,
     remove_alias,
     remove_engine,
@@ -116,3 +117,16 @@ def _alias_shell_complete(ctx: click.Context, param: str, incomplete: str) -> li
 @with_exception_handler()
 def remove_alias_cmd(alias: str) -> None:
     remove_alias(alias)
+
+
+@config_cmd.command("edit")
+@click.option(
+    "-e",
+    "--editor",
+    "editor",
+    required=False,
+    help="Specify the editor you want to use",
+)
+@with_exception_handler()
+def edit_config(editor: Optional[str]) -> None:
+    click.edit(editor=editor, filename=get_configfile(), require_save=True)

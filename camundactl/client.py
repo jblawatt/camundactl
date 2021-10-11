@@ -1,6 +1,8 @@
+from typing import Optional
+
 from requests import Session, session
 
-from camundactl.config import EngineDict
+from camundactl.config import ConfigDict, EngineDict
 
 
 def create_session(engine_config: EngineDict) -> Session:
@@ -8,7 +10,8 @@ def create_session(engine_config: EngineDict) -> Session:
     auth = engine_config.get("auth")
     if auth:
         s.auth = (auth["user"], auth["password"])
-    s.verify = engine_config.get("verify", True)
+    if "verify" in engine_config:
+        s.verify = engine_config["verify"]
     return s
 
 
@@ -28,3 +31,23 @@ class Client:
 
     def delete(self, path, /, **kwargs):
         return self.session.delete(self.base_url + path, **kwargs)
+
+
+def create_client(
+    config_: ConfigDict,
+    selected_engine: Optional[str] = None,
+) -> Client:
+
+    if not config_["engines"]:
+        raise Exception("invalid configuration")
+
+    if selected_engine is None:
+        selected_engine = config_.get("current_engine")
+    if not selected_engine:
+        raise Exception("no current and no given engine")
+
+    for engine in config_["engines"]:
+        if selected_engine == engine["name"]:
+            return Client(create_session(engine), engine["url"])
+    else:
+        raise Exception(f"no engine with name: {selected_engine}")

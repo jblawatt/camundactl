@@ -22,6 +22,7 @@ class EngineDict(TypedDict):
     url: str
     auth: ContextAuthDict
     verify: bool
+    spec_version: Optional[str]
 
 
 CommandAliasLookup = dict[str, str]
@@ -34,6 +35,8 @@ class ConfigDict(TypedDict):
     extra_paths: Optional[List[str]]
     log_level: Optional[Literal["DEBUG", "INFO", "WARNING", "ERROR"]]
     alias: Optional[CommandAliasLookup]
+    spec_version: Optional[str]
+    extra_template_paths: Optional[list[str]]
 
 
 CAMUNDA_CONFIG_FILE = "config"
@@ -46,31 +49,38 @@ NEW_CONTEXT_TEMPATE = ConfigDict(
     log_level="ERROR",
     extra_paths=[],
     alias={},
+    spec_version=None,
+    extra_template_paths=[],
 )
 
 
-def _get_configfile() -> Path:
+def get_configfile() -> Path:
     app_dir = click.get_app_dir(APP_NAME)
     return Path(app_dir) / "config.yml"
 
 
 def _write_config(config: ConfigDict) -> None:
-    config_file = _get_configfile()
+    config_file = get_configfile()
     with open(config_file, "w") as fh:
         yaml.dump(config, fh)
 
 
+def get_configdir() -> Path:
+    return Path(click.get_app_dir(APP_NAME))
+
+
 def _ensure_configfile() -> None:
-    config_file = _get_configfile()
+    config_file = get_configfile()
     if not config_file.exists():
         app_dir = Path(click.get_app_dir(APP_NAME))
         app_dir.mkdir(parents=True, exist_ok=True)
+        (app_dir / "templates").mkdir(parents=True, exist_ok=True)
         _write_config(NEW_CONTEXT_TEMPATE)
 
 
 def load_config() -> ConfigDict:
     _ensure_configfile()
-    config_file = _get_configfile()
+    config_file = get_configfile()
     with open(config_file, "r") as fh:
         return cast(ConfigDict, yaml.load(fh, Loader=yaml.FullLoader))
 
@@ -79,7 +89,7 @@ def add_engine(engine: EngineDict, select: bool = False) -> None:
     config = load_config()
     engines = list(pluck("name", config["engines"]))
     if engine["name"] in engines:
-        raise Exception("Engine with name '%s' already exists." % engine["name"])
+        raise Exception(f"Engine with name '{engine['name']}' already exists.")
     config["engines"].append(engine)
     if select:
         config["current_engine"] = engine["name"]

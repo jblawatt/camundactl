@@ -3,7 +3,7 @@ from jinja2 import Template
 
 from camundactl.client import Client, create_session
 from camundactl.cmd.base import root
-from camundactl.config import EngineDict, _get_configfile, load_config
+from camundactl.config import EngineDict, get_configfile, load_config
 
 template = Template(
     """        _   _
@@ -53,15 +53,11 @@ def camunda_engine_version(engine: EngineDict) -> str:
 def info() -> None:
     config = load_config()
 
-    # import if needed. otherwise we get an import error
-    # while disvodering commands
-    from camundactl.cmd.openapi import command_factory
-
     click.echo(
         template.render(
             config=config,
-            openapi=command_factory.openapi,
+            openapi="",
             camunda_engine_version=camunda_engine_version,
-            config_file=_get_configfile(),
+            config_file=get_configfile(),
         )
     )

@@ -1,9 +1,16 @@
-from typing import Any, Dict, Optional
+from typing import Any, List, Optional
 
 import click
 from jinja2 import Environment, Template, TemplateNotFound
-from jinja2.loaders import DictLoader
+from jinja2.loaders import (
+    BaseLoader,
+    ChoiceLoader,
+    DictLoader,
+    FileSystemLoader,
+    PackageLoader,
+)
 
+from camundactl.config import get_configdir, load_config
 from camundactl.output.base import OutputHandler
 
 DEFAULT_TEMPLATES_DICT = {
@@ -34,19 +41,30 @@ class TemplateOutputHandler(OutputHandler):
     def __init__(
         self,
         default_template="default",
-        extra_template_mapping: Optional[Dict[str, str]] = None,
+        extra_loaders: Optional[list[BaseLoader]] = None,
     ):
         self.default_template = default_template
-        loader = DictLoader(
-            dict(**DEFAULT_TEMPLATES_DICT, **(extra_template_mapping or {}))
-        )
+        self.extra_loaders = extra_loaders or []
+        loader = ChoiceLoader(self._create_loaders() + self.extra_loaders)
         self.env = Environment(loader=loader)
 
-    def handle(self, result: Any, output_template: str) -> Any:
+    def _create_loaders(self) -> List[BaseLoader]:
+        choices = []
+        choices.append(DictLoader(DEFAULT_TEMPLATES_DICT))
+        config = load_config()
+        for path in config.get("extra_template_paths", []):
+            choices.append(FileSystemLoader(path))
+        choices.append(FileSystemLoader(get_configdir() / "templates"))
+        return choices
+
+    def handle(self, result: Any, output_template: Optional[str]) -> Any:
+        if result is None and output_template is None:
+            return
+        output_template = output_template or self.default_template
         try:
             template = self.env.get_template(output_template)
         except TemplateNotFound:
-            template = Template(output_template or self.default_template)
+            template = Template(output_template)
         if isinstance(result, dict):
             context = {**result, "result": result}
         else:

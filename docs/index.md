@@ -26,6 +26,9 @@ _Camunda Control_ (`cctl`) is a command line interface to the camunda REST API.
 The majority of the direct camunda commands are generated from the `openapi.json`
 file provided by the camunda project. For more details have a look a their [documentation](https://docs.camunda.org/manual/7.15/reference/rest/openapi/).
 
+The aim of this tool is to create a quick way to interact with the API while using
+the speed and flexibility of command line tools over guis for experienced users.
+
 ## What it does
 
 ```bash
