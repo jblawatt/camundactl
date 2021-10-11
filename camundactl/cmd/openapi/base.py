@@ -9,7 +9,7 @@ def load_spec() -> dict:
     spec_module = "camundactl.cmd.openapi.openapi_specs"
 
     config = load_config()
-    spec_version = config.get("spec_version", "latest")
+    spec_version = config.get("spec_version", "latest") or "latest"
     spec_filename = f"openapi-{spec_version}.json"
     try:
         spec_file = open_text(spec_module, spec_filename)
