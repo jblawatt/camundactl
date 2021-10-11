@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "camundactl"
-version = "0.1.0a3"
+version = "0.1.0a4"
 description = "A Camunda cli that interacts with the rest api"
 authors = ["Jens Blawatt <jblawatt@googlemail.com>"]
 license = "MIT"
