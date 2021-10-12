@@ -18,7 +18,7 @@ class ContextAuthDict(TypedDict):
 
 
 class EngineDict(TypedDict):
-    name: Optional[str]
+    name: str
     url: str
     auth: ContextAuthDict
     verify: bool

@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 
 import click
 from tabulate import tabulate
@@ -20,6 +20,15 @@ from camundactl.config import (
 @root.group("config", cls=AliasGroup, help="change engines configuration")
 def config_cmd():
     pass
+
+
+def _engine_shell_completion(ctx: click.Context, param: str, incomplete: str) -> List[str]:
+    config = load_config()
+    return sorted([
+        engine["name"]
+        for engine in config["engines"]
+        if engine["name"].startswith(incomplete)
+    ])
 
 
 @config_cmd.command("get-engines")
@@ -74,14 +83,14 @@ def add_engine(
 
 
 @config_cmd.command("remove-engine")
-@click.argument("name")
+@click.argument("name", autocompletion=_engine_shell_completion)
 @with_exception_handler()
 def remove(name: str):
     remove_engine(name)
 
 
 @config_cmd.command("activate-engine")
-@click.argument("name")
+@click.argument("name", autocompletion=_engine_shell_completion)
 @with_exception_handler()
 def activate(name: str):
     activate_engine(name)
