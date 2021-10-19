@@ -53,7 +53,7 @@ where `command`, `operation/resource`, `args` and `flags` are:
 Camunda Control can be installed via pip:
 
 ```bash
-$ pip install camuncactl [--user]
+$ pip install camundactl [--user]
 ```
 
 ## Examples
