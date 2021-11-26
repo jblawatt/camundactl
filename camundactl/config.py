@@ -27,6 +27,9 @@ class EngineDict(TypedDict):
 
 CommandAliasLookup = dict[str, str]
 
+class TemplateConfig(TypedDict):
+    extra_paths: Optional[List[str]]
+    extra_patterns: Optional[List[str]]
 
 class ConfigDict(TypedDict):
     version: str
@@ -36,7 +39,7 @@ class ConfigDict(TypedDict):
     log_level: Optional[Literal["DEBUG", "INFO", "WARNING", "ERROR"]]
     alias: Optional[CommandAliasLookup]
     spec_version: Optional[str]
-    extra_template_paths: Optional[list[str]]
+    template: Optional[TemplateConfig]
 
 
 CAMUNDA_CONFIG_FILE = "config"
@@ -50,7 +53,7 @@ NEW_CONTEXT_TEMPATE = ConfigDict(
     extra_paths=[],
     alias={},
     spec_version=None,
-    extra_template_paths=[],
+    template=None
 )
 
 

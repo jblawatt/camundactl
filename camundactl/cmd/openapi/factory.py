@@ -24,7 +24,7 @@ from camundactl.output import (
     default_object_table_output,
     default_raw_output,
     default_table_output,
-    default_template_output,
+    TemplateOutputHandler,
 )
 from camundactl.output.base import OutputHandler
 from camundactl.output.decorator import with_output
@@ -238,7 +238,9 @@ class OpenAPICommandFactory(object):
             default_table_output if has_list_response else default_object_table_output,
             default_json_output,
             default_jsonpath_output,
-            default_template_output,
+            TemplateOutputHandler(
+                tpl_lookup_context={"operation_id": operation_id, "verb": "get"}
+            ),
             default_raw_output,
         )
 
@@ -271,10 +273,16 @@ class OpenAPICommandFactory(object):
             resp = client.delete(path.format(**args), params=options)
             resp.raise_for_status()
 
+        output_handlers = (
+            TemplateOutputHandler(
+                tpl_lookup_context={"operation_id": operation_id, "verb": "delete"}
+            ),
+        )
+
         return self.create_command(
             command=command,
             operation_id=operation_id,
-            output_handlers=(default_template_output,),
+            output_handlers=output_handlers,
             args_autocomplete=args_autocomplete
             or self._get_default_args_autocomplete(path),
             options_autocomplete=options_autocomplete
@@ -292,7 +300,11 @@ class OpenAPICommandFactory(object):
 
         path, definition = self._get_operation_definition(operation_id, method)
 
-        output_handlers = (default_template_output,)
+        output_handlers = (
+            TemplateOutputHandler(
+                tpl_lookup_context={"operation_id": operation_id, "verb": method}
+            ),
+        )
 
         @click.option(
             "--skip-validation",
@@ -415,7 +427,14 @@ class OpenAPICommandFactory(object):
                     # use default
                     output_handlers = None
                 else:
-                    output_handlers = (default_template_output,)
+                    output_handlers = (
+                        TemplateOutputHandler(
+                            tpl_lookup_context={
+                                "operation_id": operation["operationId"],
+                                "verb": method,
+                            }
+                        ),
+                    )
 
                 self.create_apply_command(
                     operation_id=operation["operationId"],
