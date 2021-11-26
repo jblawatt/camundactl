@@ -1,7 +1,7 @@
 import functools
 import re
 from http import HTTPStatus
-from typing import Callable, List, NamedTuple, Optional
+from typing import Any, Callable, List, NamedTuple, Optional, TypeVar
 
 import click
 from click.exceptions import ClickException
@@ -38,10 +38,9 @@ def with_query_option_factory(options: List[OptionTuple], name: str):
             if not option.multiple:
                 if option.type_ == bool:
                     long = f"--{value}/--not-{value}"
-                    # FIXME: cannt always be false
                     click_kwargs.update(
                         {
-                            "default": False,
+                            "default": None,
                         }
                     )
                 else:
@@ -121,8 +120,11 @@ def with_args_factory(args: List[ArgumentTuple], name: str):
     return inner
 
 
-def with_exception_handler():
-    def inner(func):
+TFun = TypeVar("TFun", bound=Callable[..., Any])
+
+
+def with_exception_handler() -> Callable[[TFun], TFun]:
+    def inner(func: TFun) -> TFun:
 
         func = click.option(
             "--traceback",
@@ -134,25 +136,30 @@ def with_exception_handler():
         )(func)
 
         @functools.wraps(func)
-        def wrapper(*args, show_traceback, **kwargs):
+        def wrapper(*args, show_traceback, **kwargs) -> Any:
             try:
                 try:
                     return func(*args, **kwargs)
                 except HTTPError as http_error:
-                    if http_error.response.status_code != HTTPStatus.NOT_FOUND:
-                        raise
-                    try:
-                        context, *_ = args
-                    except ValueError:
-                        # no context passed and args are empty
-                        # FIXME: should not happen. where is the context gone?
-                        raise ClickException(
-                            f"error loading requested object: {http_error}"
-                        )
+                    status_code = http_error.response.status_code
+                    if status_code == HTTPStatus.NOT_FOUND:
+                        try:
+                            context, *_ = args
+                        except ValueError:
+                            # no context passed and args are empty
+                            # FIXME: should not happen. where is the context gone?
+                            raise ClickException(
+                                f"error loading requested object: {http_error}"
+                            )
+                        else:
+                            raise ClickException(
+                                f"the object '{context.info_name}' you requested does not exists"
+                            )
+                    elif status_code == HTTPStatus.BAD_REQUEST:
+                        json_resp = http_error.response.json()
+                        raise ClickException(json_resp["message"])
                     else:
-                        raise ClickException(
-                            f"the object '{context.info_name}' you requested does not exists"
-                        )
+                        raise
             except Exception as error:
                 if show_traceback:
                     raise

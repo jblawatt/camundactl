@@ -1,12 +1,15 @@
 import json
+from functools import lru_cache
 from importlib.resources import files, open_text
-from typing import cast
+from typing import Dict, cast
 
 from camundactl.config import load_config
 
 
-def load_spec() -> dict:
-    spec_module = "camundactl.cmd.openapi.openapi_specs"
+# FIXME: aufruf optimieren
+@lru_cache
+def load_spec() -> Dict:
+    spec_module = "camundactl.openapi.specs"
 
     config = load_config()
     spec_version = config.get("spec_version", "latest") or "latest"
@@ -23,4 +26,4 @@ def load_spec() -> dict:
             f"No OpenAPI spec with version '{spec_version}' found. "
             f"Try one of: {', '.join(sorted(versions, reverse=True))}"
         )
-    return cast(dict, json.load(spec_file))
+    return cast(Dict, json.load(spec_file))

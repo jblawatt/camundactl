@@ -1,4 +1,4 @@
-from typing import Optional, List
+from typing import List, Optional
 
 import click
 from tabulate import tabulate
@@ -22,13 +22,17 @@ def config_cmd():
     pass
 
 
-def _engine_shell_completion(ctx: click.Context, param: str, incomplete: str) -> List[str]:
+def _engine_shell_completion(
+    ctx: click.Context, param: str, incomplete: str
+) -> List[str]:
     config = load_config()
-    return sorted([
-        engine["name"]
-        for engine in config["engines"]
-        if engine["name"].startswith(incomplete)
-    ])
+    return sorted(
+        [
+            engine["name"]
+            for engine in config["engines"]
+            if engine["name"].startswith(incomplete)
+        ]
+    )
 
 
 @config_cmd.command("get-engines")
@@ -37,7 +41,10 @@ def get_engines():
     context = load_config()
     for engine in context["engines"]:
         is_current = engine["name"] == context.get("current_engine")
-        print(engine["name"] + (" *" if is_current else ""))
+        if is_current:
+            click.echo(click.style(engine["name"] + " *", bold=True, fg="yellow"))
+        else:
+            click.echo(engine["name"])
 
 
 @config_cmd.command("add-engine")
@@ -89,11 +96,12 @@ def remove(name: str):
     remove_engine(name)
 
 
-@config_cmd.command("activate-engine")
+@config_cmd.command("use-engine")
 @click.argument("name", autocompletion=_engine_shell_completion)
 @with_exception_handler()
-def activate(name: str):
+def activate(name: str) -> None:
     activate_engine(name)
+    click.echo("engine " + click.style(name, bold=True, fg="yellow") + " selected")
 
 
 @config_cmd.command("get-alias")

@@ -5,7 +5,7 @@ import yaml
 
 from camundactl.cmd.base import root
 from camundactl.cmd.helpers import with_exception_handler
-from camundactl.cmd.openapi.base import load_spec
+from camundactl.openapi.loader import load_spec
 
 
 def _autocomplete_schema_names(

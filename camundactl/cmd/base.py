@@ -1,11 +1,15 @@
+from camundactl.cmd.apply import ApplyMultiCommand
 import importlib
 import logging
 import sys
 from typing import Mapping, Optional
 
 import click
+from tabulate import tabulate
 
-from camundactl.client import create_client
+from camundactl.cmd.delete import DeleteMultiCommand
+from camundactl.cmd.get import GetMulitCommand
+from camundactl.cmd.context import ContextObject
 from camundactl.config import ConfigDict, load_config
 
 try:
@@ -58,8 +62,8 @@ class AliasGroup(click.Group):
 )
 @click.pass_context
 def root(ctx: click.Context, log_level: Optional[str] = None) -> None:
-    ctx.ensure_object(dict)
-    config_ = load_config()
+    ctx.ensure_object(ContextObject)
+    config_ = ctx.obj.get_config()
     if log_level or (log_level := config_.get("log_level", "")):
         logging.basicConfig(
             level=getattr(logging, log_level), handlers=[DefaultLogHandler(sys.stdout)]
@@ -71,24 +75,16 @@ def _group_factory(parent, parent_kwargs):
     @click.pass_context
     @click.option("-e", "--engine", "engine", required=False)
     def group(ctx: click.Context, engine: Optional[str]):
-        prepare_context(ctx, engine=engine)
+        ctx.obj.set_selected_engine(engine)
 
     return group
-
-
-def prepare_context(ctx: click.Context, engine: Optional[str] = None) -> None:
-    """builds up the context with config and client instance"""
-    ctx.ensure_object(dict)
-    config_ = load_config()
-    ctx.obj["config"] = config_
-    ctx.obj["client"] = create_client(config_, selected_engine=engine)
 
 
 get = _group_factory(
     root,
     dict(
         name="get",
-        cls=AliasGroup,
+        cls=GetMulitCommand,
         help="query resources of camunda engine",
     ),
 )
@@ -108,7 +104,7 @@ delete = _group_factory(
     root,
     dict(
         name="delete",
-        cls=AliasGroup,
+        cls=DeleteMultiCommand,
         help="delete ressources",
     ),
 )
@@ -118,10 +114,54 @@ apply = _group_factory(
     root,
     dict(
         name="apply",
-        cls=AliasGroup,
+        cls=ApplyMultiCommand,
         help="apply changes to the engine",
     ),
 )
+
+
+@root.command("api-resources")
+@click.option("-e", "--engine", "engine", required=False)
+@click.pass_context
+def api_resources(ctx: click.Context, engine: Optional[str]):
+    ctx.obj.set_selected_engine(engine)
+    json_data = ctx.obj.get_spec()
+    rows = []
+    for path, path_conf in json_data["paths"].items():
+        for verb, op_conf in path_conf.items():
+            for tag in op_conf["tags"]:
+                try:
+                    # schema = str(op_conf["requestBody"]["content"]["application/json"])
+                    schema = op_conf["requestBody"]["content"]["application/json"]["schema"][
+                        "$ref"
+                    ]
+                except KeyError:
+                    schema = "-"
+                else:
+                    *_, schema = schema.split("/")
+                rows.append(
+                    [
+                        tag,
+#                        path,
+                        verb,
+                        op_conf["operationId"],
+                        schema,
+                        op_conf.get("summary"),
+                    ]
+                )
+    click.echo(
+        tabulate(
+            rows,
+            headers=(
+                "Tag",
+#                "Path",
+                "Verb",
+                "Operation",
+                "Schema",
+                "Summary",
+            ),
+        )
+    )
 
 
 def init():
@@ -142,4 +182,4 @@ def init():
         importlib.import_module(path)
 
 
-init()
+# init()
