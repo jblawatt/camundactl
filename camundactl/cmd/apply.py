@@ -1,11 +1,10 @@
-import click
-
 import functools
 from typing import List, Optional
 
+import click
+
 from camundactl.cmd.get import OpenAPIMulitCommandBase
 from camundactl.cmd.openapi.factory import OpenAPICommandFactory
-
 
 
 class ApplyMultiCommand(OpenAPIMulitCommandBase):
@@ -21,13 +20,11 @@ class ApplyMultiCommand(OpenAPIMulitCommandBase):
             self.verb = verb
             result += super().list_commands(ctx)
         self.verb = None
-        return  result
+        return result
 
     def get_command(self, ctx: click.Context, name: str) -> Optional[click.Command]:
         for verb in self.verbs:
-            self. verb = verb
+            self.verb = verb
             if cmd := super().get_command(ctx, name):
                 return cmd
         return None
-
-

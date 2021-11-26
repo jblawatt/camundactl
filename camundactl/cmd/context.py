@@ -1,7 +1,7 @@
-from inspect import getfullargspec
 import warnings
 from functools import cache, wraps
-from typing import Dict, Optional, Callable
+from inspect import getfullargspec
+from typing import Callable, Dict, Optional
 
 import click
 

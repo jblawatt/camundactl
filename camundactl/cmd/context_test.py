@@ -1,6 +1,6 @@
-from camundactl.openapi.cache import OpenAPISpecCache
 from camundactl.client import Client
 from camundactl.cmd.context import ContextObject
+from camundactl.openapi.cache import OpenAPISpecCache
 
 
 def test_ContextObject_get_client():

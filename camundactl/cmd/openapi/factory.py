@@ -9,6 +9,7 @@ import yaml
 from toolz import first
 
 from camundactl.client import Client
+from camundactl.cmd.context import ensure_object
 from camundactl.cmd.helpers import (
     ArgumentTuple,
     OptionTuple,
@@ -16,7 +17,6 @@ from camundactl.cmd.helpers import (
     with_exception_handler,
     with_query_option_factory,
 )
-from camundactl.cmd.context import ensure_object
 from camundactl.openapi.cache import OpenAPISpecCache
 from camundactl.output import (
     default_json_output,

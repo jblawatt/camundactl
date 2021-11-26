@@ -1,4 +1,3 @@
-from camundactl.cmd.apply import ApplyMultiCommand
 import importlib
 import logging
 import sys
@@ -7,9 +6,10 @@ from typing import Mapping, Optional
 import click
 from tabulate import tabulate
 
+from camundactl.cmd.apply import ApplyMultiCommand
+from camundactl.cmd.context import ContextObject
 from camundactl.cmd.delete import DeleteMultiCommand
 from camundactl.cmd.get import GetMulitCommand
-from camundactl.cmd.context import ContextObject
 from camundactl.config import ConfigDict, load_config
 
 try:
@@ -132,9 +132,9 @@ def api_resources(ctx: click.Context, engine: Optional[str]):
             for tag in op_conf["tags"]:
                 try:
                     # schema = str(op_conf["requestBody"]["content"]["application/json"])
-                    schema = op_conf["requestBody"]["content"]["application/json"]["schema"][
-                        "$ref"
-                    ]
+                    schema = op_conf["requestBody"]["content"]["application/json"][
+                        "schema"
+                    ]["$ref"]
                 except KeyError:
                     schema = "-"
                 else:
@@ -142,7 +142,7 @@ def api_resources(ctx: click.Context, engine: Optional[str]):
                 rows.append(
                     [
                         tag,
-#                        path,
+                        #                        path,
                         verb,
                         op_conf["operationId"],
                         schema,
@@ -154,7 +154,7 @@ def api_resources(ctx: click.Context, engine: Optional[str]):
             rows,
             headers=(
                 "Tag",
-#                "Path",
+                #                "Path",
                 "Verb",
                 "Operation",
                 "Schema",

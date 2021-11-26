@@ -1,12 +1,12 @@
-from typing import List, Optional, cast, List, Callable
+from functools import reduce
+from typing import Callable, List, Optional, cast
 
 import click
 from toolz.functoolz import curry
-from functools import reduce
 
+from camundactl.cmd.context import ContextObject, ensure_object
 from camundactl.cmd.openapi.factory import OpenAPICommandFactory
 from camundactl.openapi.cache import OpenAPISpecCache
-from camundactl.cmd.context import ContextObject, ensure_object
 
 
 @curry
