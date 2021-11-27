@@ -57,6 +57,13 @@ NEW_CONTEXT_TEMPATE = ConfigDict(
 )
 
 
+class EngineExistsError(Exception):
+
+    def __init__(self, name):
+        super().__init__(f"Engine with the name '{name}' already exists.")
+        self.name = name
+
+
 def get_configfile() -> Path:
     app_dir = click.get_app_dir(APP_NAME)
     return Path(app_dir) / "config.yml"
@@ -89,14 +96,20 @@ def load_config() -> ConfigDict:
 
 
 def add_engine(engine: EngineDict, select: bool = False) -> None:
+    """
+    Adds a new engine to the config file. Selects it as current
+    engine if `selected` or if it is the first one.
+    """
     config = load_config()
     engines = list(pluck("name", config["engines"]))
     if engine["name"] in engines:
-        raise Exception(f"Engine with name '{engine['name']}' already exists.")
+        raise EngineExistsError(engine['name'])
     config["engines"].append(engine)
+    # activate if this is the first engine added
+    if len(config["engines"]) == 1:
+        select = True
     if select:
         config["current_engine"] = engine["name"]
-
     _write_config(config)
 
 

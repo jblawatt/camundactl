@@ -10,7 +10,6 @@ repository = "https://github.com/jblawatt/camundactl"
 documentation = "https://github.com/jblawatt/camundactl"
 keywords = ["camunda", "click", "cli"]
 
-
 [tool.poetry.dependencies]
 python = "^3.8"
 PyYAML = "^5.4.1"
@@ -53,3 +52,6 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
 "cctl" = "camundactl.__main__:_main"
+
+[tool.pytest.ini_options]
+addopts = "-s --cov"
