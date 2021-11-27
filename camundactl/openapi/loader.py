@@ -6,8 +6,6 @@ from typing import Dict, cast
 from camundactl.config import load_config
 
 
-# FIXME: aufruf optimieren
-@lru_cache
 def load_spec() -> Dict:
     spec_module = "camundactl.openapi.specs"
 

@@ -39,12 +39,15 @@ def _engine_shell_completion(
 @with_exception_handler()
 def get_engines():
     context = load_config()
-    for engine in context["engines"]:
+    engines = context["engines"]
+    for engine in engines:
         is_current = engine["name"] == context.get("current_engine")
         if is_current:
             click.echo(click.style(engine["name"] + " *", bold=True, fg="yellow"))
         else:
             click.echo(engine["name"])
+    if not engines:
+        click.echo(click.style("no engines configured", fg="yellow"))
 
 
 @config_cmd.command("add-engine")
@@ -74,7 +77,7 @@ def get_engines():
     "--no-verify", "no_verify", default=False, required=False, help="do not verify ssl"
 )
 @with_exception_handler()
-def add_engine(
+def add_engine_cmd(
     name: str,
     url: str,
     user: Optional[str],
@@ -82,7 +85,6 @@ def add_engine(
     select: bool,
     no_verify: bool,
 ):
-
     new_engine = {"name": name, "url": url, "verify": not no_verify}
     if user and password:
         new_engine["auth"] = {"user": user, "password": password}

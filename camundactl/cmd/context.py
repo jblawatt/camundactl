@@ -15,6 +15,9 @@ from camundactl.openapi.loader import load_spec
 class ContextObject:
 
     _selected_engine = None
+    _spec: Optional[Dict] = None
+    _config: Optional[Dict] = None
+    _spec_cache = None
 
     def __getitem__(self, key):
 
@@ -39,26 +42,33 @@ class ContextObject:
         # TODO: validate Engine
         self._selected_engine = engine
 
-    # @cache
+    @cache
     def get_client(self) -> Client:
         return create_client(
             self.get_config(),
             selected_engine=self._selected_engine,
         )
 
-    # @cache
+    @cache
     def get_config(self) -> ConfigDict:
-        return load_config()
+        if self._config is None:
+            self._config = load_config()
+        return self._config
 
+    @cache
     def get_spec(self) -> Dict:
-        return load_spec()
+        if self._spec is None:
+            self._spec = load_spec()
+        return self._spec
 
-    # @cache
+    @cache
     def get_spec_cache(self) -> OpenAPISpecCache:
-        spec = self.get_spec()
-        return OpenAPISpecCache(spec)
+        if self._spec_cache is None:
+            spec = self.get_spec()
+            self._spec_cache = OpenAPISpecCache(spec)
+        return self._spec_cache
 
-    # @cache
+    @cache
     def get_camunda_client(self):
         return CamundaOpenAPIClient(
             spec=self.get_spec(),
