@@ -1,3 +1,4 @@
+from logging import getLogger
 from functools import reduce
 from typing import Callable, List, Optional, cast
 
@@ -8,6 +9,7 @@ from camundactl.cmd.context import ContextObject, ensure_object
 from camundactl.cmd.openapi.factory import OpenAPICommandFactory
 from camundactl.openapi.cache import OpenAPISpecCache
 
+logger = getLogger(__name__)
 
 @curry
 def to_command_name(operation_id: str, prefix: str) -> str:

@@ -1,5 +1,6 @@
 import importlib
 import logging
+import logging.config
 import sys
 from typing import Mapping, Optional
 
@@ -13,7 +14,8 @@ from camundactl.cmd.get import GetMulitCommand
 from camundactl.config import ConfigDict, load_config
 
 try:
-    from rainbow_logging_handler import RainbowLoggingHandler as DefaultLogHandler
+    from rainbow_logging_handler import \
+        RainbowLoggingHandler as DefaultLogHandler
 except ImportError:
     from logging import StreamHandler as DefaultLogHandler
 
@@ -68,6 +70,13 @@ def root(ctx: click.Context, log_level: Optional[str] = None) -> None:
         logging.basicConfig(
             level=getattr(logging, log_level), handlers=[DefaultLogHandler(sys.stdout)]
         )
+        logger.debug("logging configured via log_level parameter. level=%s", log_level)
+    else:
+        if logging_config := config_.get("logging"):
+            logging.config.dictConfig(logging_config)
+            logger.debug("logging configured view config.logging.")
+        else:
+            logger.debug("no logging configured.")
 
 
 def _group_factory(parent, parent_kwargs):

@@ -86,7 +86,17 @@ $ cctl config remove-engine client-a
 
 ## Logging
 
-TODO
+There are two options to configure logging for Camunda Ctrl:
+**Log Level via CLI/Config**
+Configuring a global `log_level` in the configuration file. This also can be provided via `-l/--log-level`. The following values are possible:
+- `DEBUG`
+- `INFO`
+- `WARNING`
+- `ERROR`
+
+**Complex configuration in config files**
+The other option for logging configuration is to provide a key `logging`. The format has to follow the python configration for dictConfig logging:
+https://docs.python.org/3/library/logging.config.html#logging.config.dictConfig
 
 ## Extra Paths
 

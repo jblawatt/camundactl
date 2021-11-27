@@ -1,6 +1,6 @@
 import logging
 from pathlib import Path
-from typing import List, Literal, Optional, TypedDict, cast
+from typing import List, Literal, Optional, TypedDict, cast, Dict
 
 import click
 import yaml
@@ -40,6 +40,7 @@ class ConfigDict(TypedDict):
     alias: Optional[CommandAliasLookup]
     spec_version: Optional[str]
     template: Optional[TemplateConfig]
+    logging: Optional[Dict]
 
 
 CAMUNDA_CONFIG_FILE = "config"
@@ -53,7 +54,8 @@ NEW_CONTEXT_TEMPATE = ConfigDict(
     extra_paths=[],
     alias={},
     spec_version=None,
-    template=None
+    template=None,
+    logging=None,
 )
 
 
