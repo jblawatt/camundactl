@@ -1,7 +1,7 @@
 import functools
-import click
-
 from typing import Any, Callable, Optional
+
+import click
 
 
 class OutputHandler:

@@ -1,6 +1,6 @@
 import logging
 from pathlib import Path
-from typing import List, Literal, Optional, TypedDict, cast, Dict
+from typing import Dict, List, Literal, Optional, TypedDict, cast
 
 import click
 import yaml
@@ -27,9 +27,11 @@ class EngineDict(TypedDict):
 
 CommandAliasLookup = dict[str, str]
 
+
 class TemplateConfig(TypedDict):
     extra_paths: Optional[List[str]]
     extra_patterns: Optional[List[str]]
+
 
 class ConfigDict(TypedDict):
     version: str
@@ -59,10 +61,15 @@ NEW_CONTEXT_TEMPATE = ConfigDict(
 )
 
 
-class EngineExistsError(Exception):
+class EngineAlreadyExistsError(Exception):
+    def __init__(self, name: str) -> None:
+        super().__init__(f"An engine with the name '{name}' already exists.")
+        self.name = name
 
-    def __init__(self, name):
-        super().__init__(f"Engine with the name '{name}' already exists.")
+
+class EngineDoesNotExists(Exception):
+    def __init__(self, name: str) -> None:
+        super().__init__(f"An engine with the name {name} does not exist.")
         self.name = name
 
 
@@ -75,6 +82,7 @@ def _write_config(config: ConfigDict) -> None:
     config_file = get_configfile()
     with open(config_file, "w") as fh:
         yaml.dump(config, fh)
+    logger.info("config file written.")
 
 
 def get_configdir() -> Path:
@@ -105,10 +113,14 @@ def add_engine(engine: EngineDict, select: bool = False) -> None:
     config = load_config()
     engines = list(pluck("name", config["engines"]))
     if engine["name"] in engines:
-        raise EngineExistsError(engine['name'])
+        raise EngineAlreadyExistsError(engine["name"])
     config["engines"].append(engine)
     # activate if this is the first engine added
     if len(config["engines"]) == 1:
+        logging.debug(
+            "configuring the first engine. overruling the "
+            "selection parameter and selecting it by default."
+        )
         select = True
     if select:
         config["current_engine"] = engine["name"]
@@ -117,26 +129,24 @@ def add_engine(engine: EngineDict, select: bool = False) -> None:
 
 def remove_engine(name: str) -> None:
     config = load_config()
-
     config["engines"] = [e for e in config["engines"] if e["name"] != name]
-
     if config["current_engine"] == name:
         config["current_engine"] = None
-
     _write_config(config)
 
 
 def activate_engine(name: str) -> None:
+    """
+    Activates the given engine as current_engine in the config file.
+    """
     config = load_config()
     engine_names = list(pluck("name", config["engines"]))
     if name not in engine_names:
-        raise Exception(
+        raise EngineDoesNotExists(
             "invalid engine name '%s'. choose one of %s."
             % (name, ", ".join(engine_names))
         )
-
     config["current_engine"] = name
-
     _write_config(config)
 
 
@@ -146,7 +156,7 @@ def add_alias(alias: str, command: str) -> None:
         config["alias"] = {}
     config["alias"][alias] = command
     _write_config(config)
-    logger.info("added alias %s for command %s", alias, command)
+    logger.info("added alias %s for command %s.", alias, command)
 
 
 def remove_alias(alias: str) -> None:

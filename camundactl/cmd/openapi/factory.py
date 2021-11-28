@@ -19,12 +19,12 @@ from camundactl.cmd.helpers import (
 )
 from camundactl.openapi.cache import OpenAPISpecCache
 from camundactl.output import (
+    TemplateOutputHandler,
     default_json_output,
     default_jsonpath_output,
     default_object_table_output,
     default_raw_output,
     default_table_output,
-    TemplateOutputHandler,
 )
 from camundactl.output.base import OutputHandler
 from camundactl.output.decorator import with_output

@@ -1,4 +1,4 @@
-from typing import Any, List, Optional, Dict
+from typing import Any, Dict, List, Optional, Iterable
 
 import click
 from jinja2 import Environment, Template, TemplateNotFound
@@ -13,6 +13,10 @@ from jinja2.loaders import (
 from camundactl.config import get_configdir, load_config
 from camundactl.output.base import OutputHandler
 
+
+__all__ = ["TemplateOutputHandler"]
+
+
 DEFAULT_TEMPLATES_DICT = {
     "default": "{{result}}",
     "result-length": "{{result|length}}",
@@ -20,17 +24,24 @@ DEFAULT_TEMPLATES_DICT = {
 
 
 class TemplateOutputHandler(OutputHandler):
+    """
+    Output handler for template output. Loads the template based
+    on different rules and provied the api result and some
+    other information as template context.
+    """
 
     name: str = "template"
 
+    # default patterns to load the template if there is 
+    # no specific teplate provided
     default_template_patterns = [
-            "{operation_id}.tpl",
-            "{parent}_{command}.tpl",
-            "{command}.tpl",
-            "{verb}_default.tpl",
-            "{parent}_default.tpl",
-            "default.tpl",
-        ]
+        "{operation_id}.tpl",
+        "{parent}_{command}.tpl",
+        "{command}.tpl",
+        "{verb}_default.tpl",
+        "{parent}_default.tpl",
+        "default.tpl",
+    ]
 
     options = {
         "output_template": click.option(
@@ -55,20 +66,21 @@ class TemplateOutputHandler(OutputHandler):
         self.default_template = default_template
         self.tpl_lookup_context = tpl_lookup_context or {}
 
-    def _create_loaders(self) -> List[BaseLoader]:
-        choices = []
-        choices.append(DictLoader(DEFAULT_TEMPLATES_DICT))
+    def _create_loaders(self) -> Iterable[BaseLoader]:
+        """
+        creates a list of templates loaders.
+        """
+        yield DictLoader(DEFAULT_TEMPLATES_DICT)
         if self.ctx:
             config = self.ctx.obj.get_config()
             extra_paths = config.get("template", {}).get("extra_paths", [])
             for path in extra_paths:
-                choices.append(FileSystemLoader(path))
-            choices.append(FileSystemLoader(get_configdir() / "templates"))
-        choices.append(PackageLoader("camundactl.output", "templates"))
-        return choices
+                yield FileSystemLoader(path)
+        yield FileSystemLoader(get_configdir() / "templates")
+        yield PackageLoader("camundactl.output", "templates")
 
-    def _create_environment(self):
-        loaders = self._create_loaders()
+    def _create_environment(self) -> Environment:
+        loaders = list(self._create_loaders())
         loader = ChoiceLoader(loaders)
         return Environment(loader=loader)
 
@@ -78,15 +90,18 @@ class TemplateOutputHandler(OutputHandler):
         except TemplateNotFound:
             return Template("")
 
-    def _create_tpl_lookup_context(self):
+    def _create_tpl_lookup_context(self) -> dict[str, Any]:
         command_name = "NO_COMMAND_FOUND"
         parent_name = "NO_PARENT_FOUND"
         if self.ctx:
-            cmd: click.Command = self.ctx.command
             command_name = self.ctx.command.name
             if self.ctx.parent:
                 parent_name = self.ctx.parent.command.name
-        return {"command": command_name, "parent": parent_name, **self.tpl_lookup_context}
+        return {
+            "command": command_name,
+            "parent": parent_name,
+            **self.tpl_lookup_context,
+        }
 
     def _get_user_template_patterns(self) -> List[str]:
         if not self.ctx:
@@ -134,5 +149,3 @@ class TemplateOutputHandler(OutputHandler):
         else:
             context = {"result": result}
         click.echo(template.render(**context))
-
-

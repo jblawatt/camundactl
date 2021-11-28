@@ -17,7 +17,7 @@ docs:
 
 
 test:
-	$(PY_RUN) pytest --cov-report=html --cov-report=term tests
+	$(PY_RUN) pytest --cov-report=html --cov-report=term $(PROJECT_ROOT)
 
 
 requirements.txt:

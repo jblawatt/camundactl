@@ -14,8 +14,7 @@ from camundactl.cmd.get import GetMulitCommand
 from camundactl.config import ConfigDict, load_config
 
 try:
-    from rainbow_logging_handler import \
-        RainbowLoggingHandler as DefaultLogHandler
+    from rainbow_logging_handler import RainbowLoggingHandler as DefaultLogHandler
 except ImportError:
     from logging import StreamHandler as DefaultLogHandler
 
