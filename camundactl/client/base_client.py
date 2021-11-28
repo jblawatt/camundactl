@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, overload, Union
 
 from requests import Session, session
 
@@ -33,21 +33,40 @@ class Client:
         return self.session.delete(self.base_url + path, **kwargs)
 
 
+@overload
 def create_client(
-    config_: ConfigDict,
+    engine_or_config: EngineDict, selected_engine: Optional[str] = None
+) -> Client:
+    ...
+
+
+@overload
+def create_client(
+    engine_or_config: ConfigDict, selected_engine: Optional[str] = None
+) -> Client:
+    ...
+
+
+def create_client(
+    engine_or_config: Union[ConfigDict, EngineDict],
     selected_engine: Optional[str] = None,
 ) -> Client:
 
-    if not config_["engines"]:
-        raise Exception("invalid configuration")
+    if "engines" in engine_or_config:
+        config_ = engine_or_config
+        if not config_["engines"]:
+            raise Exception("invalid configuration")
+        if selected_engine is None:
+            selected_engine = config_.get("current_engine")
+        if not selected_engine:
+            raise Exception("no current and no given engine")
 
-    if selected_engine is None:
-        selected_engine = config_.get("current_engine")
-    if not selected_engine:
-        raise Exception("no current and no given engine")
-
-    for engine in config_["engines"]:
-        if selected_engine == engine["name"]:
-            return Client(create_session(engine), engine["url"])
+        for engine in config_["engines"]:
+            if selected_engine == engine["name"]:
+                break
+        else:
+            raise Exception(f"no engine with name: {selected_engine}")
     else:
-        raise Exception(f"no engine with name: {selected_engine}")
+        engine = engine_or_config
+
+    return Client(create_session(engine), engine["url"])

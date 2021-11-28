@@ -1,6 +1,7 @@
 from typing import Any, Dict, List, Optional, Iterable
 
 import click
+import logging
 from jinja2 import Environment, Template, TemplateNotFound
 from jinja2.loaders import (
     BaseLoader,
@@ -22,6 +23,8 @@ DEFAULT_TEMPLATES_DICT = {
     "result-length": "{{result|length}}",
 }
 
+logger = logging.getLogger(__name__)
+
 
 class TemplateOutputHandler(OutputHandler):
     """
@@ -32,7 +35,7 @@ class TemplateOutputHandler(OutputHandler):
 
     name: str = "template"
 
-    # default patterns to load the template if there is 
+    # default patterns to load the template if there is
     # no specific teplate provided
     default_template_patterns = [
         "{operation_id}.tpl",
@@ -112,6 +115,14 @@ class TemplateOutputHandler(OutputHandler):
         except KeyError:
             return []
 
+    def _get_template_patterns(self) -> List[str]:
+        user_template_patterns = self._get_user_template_patterns()
+        template_patterns = user_template_patterns + self.default_template_patterns
+
+        if self.default_template:
+            template_patterns.insert(0, self.default_template)
+        return template_patterns
+
     def _get_template(
         self, env: Environment, name_or_tpl: Optional[str] = None
     ) -> Template:
@@ -121,15 +132,16 @@ class TemplateOutputHandler(OutputHandler):
             except TemplateNotFound:
                 return Template(name_or_tpl)
 
-        user_template_patterns = self._get_user_template_patterns()
-        template_patterns = user_template_patterns + self.default_template_patterns
-
+        template_patterns = self._get_template_patterns()
         lookup_context = self._create_tpl_lookup_context()
         lookup = []
         for pattern in template_patterns:
             try:
                 lookup.append(pattern.format(**lookup_context))
-            except KeyError:
+            except KeyError as error:
+                logger.warn(
+                    "Cannot apply to template pattern %s. Error: %s.", pattern, error
+                )
                 continue
 
         try:

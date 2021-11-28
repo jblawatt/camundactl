@@ -1,44 +1,17 @@
 import click
-from jinja2 import Template
 
-from camundactl.client import Client, create_session
+from typing import Dict
+
+from camundactl.client import create_client
 from camundactl.cmd.base import root
-from camundactl.config import EngineDict, get_configfile, load_config
-
-template = Template(
-    """        _   _
-  __ __| |_| |
- / _/ _|  _| |
- \__\__|\__|_|
-
-cctl -- Camunda Control
-~~~~~~~~~~~~~~~~~~~~~~~
-
-Version:        ---
-Git:            ---
-Current Engine: {{config.current_engine}}
-Config-File:    {{config_file}}
-
-OpenAPI:
-    Title:       {{openapi.info.title}}
-    Description: {{openapi.info.description}}
-    Version:     {{openapi.info.version}}
-
-Engines: {% if config.engines %}{% for engine in config.engines %}
-    - Name: {{engine.name}}
-      URL: {{engine.url}}
-      Version: {{ camunda_engine_version(engine) }}{% endfor %}{% else %}-{% endif %}
-
-Extra Paths: {%if config.extra_path %}{% for ep in config.extra_paths %}
-    - {{ep}} {% endfor %}{% else %}-{% endif %}
-
-"""
-)
+from camundactl.cmd.context import ensure_object
+from camundactl.output.decorator import with_output
+from camundactl.output.template import TemplateOutputHandler
+from camundactl.config import EngineDict, get_configfile, ConfigDict
 
 
 def camunda_engine_version(engine: EngineDict) -> str:
-    session = create_session(engine)
-    client = Client(session, engine["url"])
+    client = create_client(engine)
     try:
         resp = client.get("/version")
         resp.raise_for_status()
@@ -50,14 +23,13 @@ def camunda_engine_version(engine: EngineDict) -> str:
 
 
 @root.command()
-def info() -> None:
-    config = load_config()
-
-    click.echo(
-        template.render(
+@with_output(TemplateOutputHandler(default_template="info.tpl"))
+@click.pass_context
+def info(ctx: click.Context) -> Dict:
+    config: ConfigDict = ctx.obj.get_config()
+    return dict(
             config=config,
-            openapi="",
+        openapi_specs= [],
             camunda_engine_version=camunda_engine_version,
             config_file=get_configfile(),
-        )
     )
