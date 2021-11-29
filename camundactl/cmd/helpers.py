@@ -1,5 +1,6 @@
 import functools
 import re
+import asyncio
 from http import HTTPStatus
 from typing import Any, Callable, List, NamedTuple, Optional, TypeVar
 
@@ -165,6 +166,19 @@ def with_exception_handler() -> Callable[[TFun], TFun]:
                     raise
                 else:
                     raise click.ClickException(str(error))
+
+        return wrapper
+
+    return inner
+
+
+def async_command():
+
+    def inner(func):
+
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs):
+            return asyncio.run(func(*args, **kwargs))
 
         return wrapper
 

@@ -1,9 +1,10 @@
 import os
 
+import asyncio
 from camundactl.cmd.base import init, root
 
 
-def _main():
+async def _main_async():
 
     init()
 
@@ -19,6 +20,8 @@ def _main():
     else:
         root()
 
+def _main():
+    asyncio.run(_main_async())
 
 if __name__ == "__main__":
     _main()

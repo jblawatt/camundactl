@@ -1,4 +1,3 @@
-import json
 import logging
 from functools import partial
 from typing import Callable, Dict, List, Optional, Tuple, TypedDict
@@ -16,6 +15,7 @@ from camundactl.cmd.helpers import (
     with_args_factory,
     with_exception_handler,
     with_query_option_factory,
+    async_command,
 )
 from camundactl.openapi.cache import OpenAPISpecCache
 from camundactl.output import (
@@ -224,7 +224,8 @@ class OpenAPICommandFactory(object):
         path = self.openapi_cache.get_operation_id_path(operation_id)
         definition = self.openapi_cache.get_operation_id_spec(operation_id)
 
-        def command(ctx: click.Context, options: Dict, args: Dict):
+        @async_command()
+        async def command(ctx: click.Context, options: Dict, args: Dict):
             client: Client = ctx.obj["client"]
             resp = client.get(path.format(**args), params=options)
             resp.raise_for_status()

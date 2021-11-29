@@ -51,7 +51,7 @@ requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
-"cctl" = "camundactl.__main__:_main"
+"cctl" = "camundactl.__main__:_main_run"
 
 [tool.pytest.ini_options]
 addopts = "-s"
