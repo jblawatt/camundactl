@@ -1,0 +1,2555 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="camunda command line interface like kubectl">
+      
+      
+      
+        <link rel="canonical" href="http://camundactl.github.io/commands/delete/">
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.1.2">
+    
+    
+      
+        <title>delete Commands - camundactl</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.f7951f6f.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.e6a45f82.min.css">
+        
+          
+          
+          <meta name="theme-color" content="#ff6e42">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="deep-orange" data-md-color-accent="deep-orange">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#cli-reference-delete" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="camundactl" class="md-header__button md-logo" aria-label="camundactl" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            camundactl
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              delete Commands
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="http://github.com/jblawatt/camundactl/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="camundactl" class="md-nav__button md-logo" aria-label="camundactl" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    camundactl
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="http://github.com/jblawatt/camundactl/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_1" type="checkbox" id="__nav_1" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_1">
+          Home
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Home" data-md-level="1">
+        <label class="md-nav__title" for="__nav_1">
+          <span class="md-nav__icon md-icon"></span>
+          Home
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/" class="md-nav__link">
+        Examples
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../configuration/" class="md-nav__link">
+        Configuration
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../usage/" class="md-nav__link">
+        Usage
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../output/" class="md-nav__link">
+        Output
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_1_6" type="checkbox" id="__nav_1_6" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_1_6">
+          Full Reference
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Full Reference" data-md-level="2">
+        <label class="md-nav__title" for="__nav_1_6">
+          <span class="md-nav__icon md-icon"></span>
+          Full Reference
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../get/" class="md-nav__link">
+        get Commands
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../apply/" class="md-nav__link">
+        apply Commands
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          delete Commands
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        delete Commands
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#cctlnbspdelete" class="md-nav__link">
+    cctl&nbsp;delete
+  </a>
+  
+    <nav class="md-nav" aria-label="cctl&nbsp;delete">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cctlnbspdelete-attachment" class="md-nav__link">
+    attachment
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cctlnbspdelete-authorization" class="md-nav__link">
+    authorization
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cctlnbspdelete-batch" class="md-nav__link">
+    batch
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cctlnbspdelete-clearincidentannotation" class="md-nav__link">
+    clearIncidentAnnotation
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cctlnbspdelete-deployment" class="md-nav__link">
+    deployment
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cctlnbspdelete-filter" class="md-nav__link">
+    filter
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cctlnbspdelete-group" class="md-nav__link">
+    group
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cctlnbspdelete-groupmember" class="md-nav__link">
+    groupMember
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cctlnbspdelete-groupmembership" class="md-nav__link">
+    groupMembership
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cctlnbspdelete-historicbatch" class="md-nav__link">
+    historicBatch
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cctlnbspdelete-historicprocessinstance" class="md-nav__link">
+    historicProcessInstance
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cctlnbspdelete-historicvariableinstance" class="md-nav__link">
+    historicVariableInstance
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cctlnbspdelete-historicvariableinstancesofhistoricprocessinstance" class="md-nav__link">
+    historicVariableInstancesOfHistoricProcessInstance
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cctlnbspdelete-incident" class="md-nav__link">
+    incident
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cctlnbspdelete-localexecutionvariable" class="md-nav__link">
+    localExecutionVariable
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cctlnbspdelete-processdefinition" class="md-nav__link">
+    processDefinition
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cctlnbspdelete-processdefinitionsbykey" class="md-nav__link">
+    processDefinitionsByKey
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cctlnbspdelete-processdefinitionsbykeyandtenantid" class="md-nav__link">
+    processDefinitionsByKeyAndTenantId
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cctlnbspdelete-processinstance" class="md-nav__link">
+    processInstance
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cctlnbspdelete-processinstancevariable" class="md-nav__link">
+    processInstanceVariable
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cctlnbspdelete-task" class="md-nav__link">
+    task
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cctlnbspdelete-tasklocalvariable" class="md-nav__link">
+    taskLocalVariable
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cctlnbspdelete-taskmetrics" class="md-nav__link">
+    taskMetrics
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cctlnbspdelete-taskvariable" class="md-nav__link">
+    taskVariable
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cctlnbspdelete-tenant" class="md-nav__link">
+    tenant
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cctlnbspdelete-user" class="md-nav__link">
+    user
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cctlnbspdelete-usermembership" class="md-nav__link">
+    userMembership
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../describe/" class="md-nav__link">
+        describe Commands
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../others/" class="md-nav__link">
+        Other Commands
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api_doc/" class="md-nav__link">
+        API Doc
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#cctlnbspdelete" class="md-nav__link">
+    cctl&nbsp;delete
+  </a>
+  
+    <nav class="md-nav" aria-label="cctl&nbsp;delete">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cctlnbspdelete-attachment" class="md-nav__link">
+    attachment
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cctlnbspdelete-authorization" class="md-nav__link">
+    authorization
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cctlnbspdelete-batch" class="md-nav__link">
+    batch
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cctlnbspdelete-clearincidentannotation" class="md-nav__link">
+    clearIncidentAnnotation
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cctlnbspdelete-deployment" class="md-nav__link">
+    deployment
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cctlnbspdelete-filter" class="md-nav__link">
+    filter
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cctlnbspdelete-group" class="md-nav__link">
+    group
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cctlnbspdelete-groupmember" class="md-nav__link">
+    groupMember
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cctlnbspdelete-groupmembership" class="md-nav__link">
+    groupMembership
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cctlnbspdelete-historicbatch" class="md-nav__link">
+    historicBatch
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cctlnbspdelete-historicprocessinstance" class="md-nav__link">
+    historicProcessInstance
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cctlnbspdelete-historicvariableinstance" class="md-nav__link">
+    historicVariableInstance
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cctlnbspdelete-historicvariableinstancesofhistoricprocessinstance" class="md-nav__link">
+    historicVariableInstancesOfHistoricProcessInstance
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cctlnbspdelete-incident" class="md-nav__link">
+    incident
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cctlnbspdelete-localexecutionvariable" class="md-nav__link">
+    localExecutionVariable
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cctlnbspdelete-processdefinition" class="md-nav__link">
+    processDefinition
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cctlnbspdelete-processdefinitionsbykey" class="md-nav__link">
+    processDefinitionsByKey
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cctlnbspdelete-processdefinitionsbykeyandtenantid" class="md-nav__link">
+    processDefinitionsByKeyAndTenantId
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cctlnbspdelete-processinstance" class="md-nav__link">
+    processInstance
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cctlnbspdelete-processinstancevariable" class="md-nav__link">
+    processInstanceVariable
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cctlnbspdelete-task" class="md-nav__link">
+    task
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cctlnbspdelete-tasklocalvariable" class="md-nav__link">
+    taskLocalVariable
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cctlnbspdelete-taskmetrics" class="md-nav__link">
+    taskMetrics
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cctlnbspdelete-taskvariable" class="md-nav__link">
+    taskVariable
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cctlnbspdelete-tenant" class="md-nav__link">
+    tenant
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cctlnbspdelete-user" class="md-nav__link">
+    user
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cctlnbspdelete-usermembership" class="md-nav__link">
+    userMembership
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+<a href="http://github.com/jblawatt/camundactl/edit/master/docs/commands/delete.md" title="Edit this page" class="md-content__button md-icon">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
+</a>
+
+
+<h1 id="cli-reference-delete">CLI Reference (<code>delete</code>)<a class="headerlink" href="#cli-reference-delete" title="Permanent link">&para;</a></h1>
+<p>All <code>delete</code> commands.</p>
+<h2 id="cctlnbspdelete">cctl&nbsp;delete<a class="headerlink" href="#cctlnbspdelete" title="Permanent link">&para;</a></h2>
+<p>delete ressources</p>
+<p><strong>Usage:</strong></p>
+<div class="highlight"><pre><span></span><code>cctl&amp;nbsp;delete [OPTIONS] COMMAND [ARGS]...
+</code></pre></div>
+<p><strong>Options:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-e</code>, <code>--engine</code></td>
+<td>text</td>
+<td>N/A</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>--help</code></td>
+<td>boolean</td>
+<td>Show this message and exit.</td>
+<td><code>False</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="cctlnbspdelete-attachment">cctl&nbsp;delete attachment<a class="headerlink" href="#cctlnbspdelete-attachment" title="Permanent link">&para;</a></h3>
+<p>Delete
+Removes an attachment from a task by id.
+URL: <code>/task/{id}/attachment/{attachmentId}</code>
+Schema: <code>-</code></p>
+<p><strong>Usage:</strong></p>
+<div class="highlight"><pre><span></span><code>cctl&amp;nbsp;delete attachment [OPTIONS] ATTACHMENTID ID
+</code></pre></div>
+<p><strong>Options:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--traceback</code></td>
+<td>boolean</td>
+<td>do not hide traceback on error</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>--query-extra</code></td>
+<td>text</td>
+<td>extra query parameters, not listed in openapi (format: PARAM=VALUE)</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>-oT</code>, <code>--output-template</code></td>
+<td>text</td>
+<td>provide a template name (one of default, result-length) or provide a jinja2 template string that will be used.</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>-o</code>, <code>--output</code></td>
+<td>choice (<code>template</code>)</td>
+<td>N/A</td>
+<td><code>template</code></td>
+</tr>
+<tr>
+<td><code>--help</code></td>
+<td>boolean</td>
+<td>Show this message and exit.</td>
+<td><code>False</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="cctlnbspdelete-authorization">cctl&nbsp;delete authorization<a class="headerlink" href="#cctlnbspdelete-authorization" title="Permanent link">&para;</a></h3>
+<p>Delete Authorization
+Deletes an authorization by id.
+URL: <code>/authorization/{id}</code>
+Schema: <code>-</code></p>
+<p><strong>Usage:</strong></p>
+<div class="highlight"><pre><span></span><code>cctl&amp;nbsp;delete authorization [OPTIONS] ID
+</code></pre></div>
+<p><strong>Options:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--traceback</code></td>
+<td>boolean</td>
+<td>do not hide traceback on error</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>--query-extra</code></td>
+<td>text</td>
+<td>extra query parameters, not listed in openapi (format: PARAM=VALUE)</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>-oT</code>, <code>--output-template</code></td>
+<td>text</td>
+<td>provide a template name (one of default, result-length) or provide a jinja2 template string that will be used.</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>-o</code>, <code>--output</code></td>
+<td>choice (<code>template</code>)</td>
+<td>N/A</td>
+<td><code>template</code></td>
+</tr>
+<tr>
+<td><code>--help</code></td>
+<td>boolean</td>
+<td>Show this message and exit.</td>
+<td><code>False</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="cctlnbspdelete-batch">cctl&nbsp;delete batch<a class="headerlink" href="#cctlnbspdelete-batch" title="Permanent link">&para;</a></h3>
+<p>Delete
+Deletes a batch by id, including all related jobs and job definitions.
+Optionally also deletes the batch history.
+URL: <code>/batch/{id}</code>
+Schema: <code>-</code></p>
+<p><strong>Usage:</strong></p>
+<div class="highlight"><pre><span></span><code>cctl&amp;nbsp;delete batch [OPTIONS] ID
+</code></pre></div>
+<p><strong>Options:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--traceback</code></td>
+<td>boolean</td>
+<td>do not hide traceback on error</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>--query-extra</code></td>
+<td>text</td>
+<td>extra query parameters, not listed in openapi (format: PARAM=VALUE)</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>--cascade</code> / <code>--not-cascade</code></td>
+<td>boolean</td>
+<td><code>true</code>, if the historic batch and historic job logs for this batch should also be deleted.</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>-oT</code>, <code>--output-template</code></td>
+<td>text</td>
+<td>provide a template name (one of default, result-length) or provide a jinja2 template string that will be used.</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>-o</code>, <code>--output</code></td>
+<td>choice (<code>template</code>)</td>
+<td>N/A</td>
+<td><code>template</code></td>
+</tr>
+<tr>
+<td><code>--help</code></td>
+<td>boolean</td>
+<td>Show this message and exit.</td>
+<td><code>False</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="cctlnbspdelete-clearincidentannotation">cctl&nbsp;delete clearIncidentAnnotation<a class="headerlink" href="#cctlnbspdelete-clearincidentannotation" title="Permanent link">&para;</a></h3>
+<p>Clear Incident Annotation
+Clears the annotation of an incident with given id.
+URL: <code>/incident/{id}/annotation</code>
+Schema: <code>-</code></p>
+<p><strong>Usage:</strong></p>
+<div class="highlight"><pre><span></span><code>cctl&amp;nbsp;delete clearIncidentAnnotation [OPTIONS] ID
+</code></pre></div>
+<p><strong>Options:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--traceback</code></td>
+<td>boolean</td>
+<td>do not hide traceback on error</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>--query-extra</code></td>
+<td>text</td>
+<td>extra query parameters, not listed in openapi (format: PARAM=VALUE)</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>-oT</code>, <code>--output-template</code></td>
+<td>text</td>
+<td>provide a template name (one of default, result-length) or provide a jinja2 template string that will be used.</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>-o</code>, <code>--output</code></td>
+<td>choice (<code>template</code>)</td>
+<td>N/A</td>
+<td><code>template</code></td>
+</tr>
+<tr>
+<td><code>--help</code></td>
+<td>boolean</td>
+<td>Show this message and exit.</td>
+<td><code>False</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="cctlnbspdelete-deployment">cctl&nbsp;delete deployment<a class="headerlink" href="#cctlnbspdelete-deployment" title="Permanent link">&para;</a></h3>
+<p>Delete
+Deletes a deployment by id.
+URL: <code>/deployment/{id}</code>
+Schema: <code>-</code></p>
+<p><strong>Usage:</strong></p>
+<div class="highlight"><pre><span></span><code>cctl&amp;nbsp;delete deployment [OPTIONS] ID
+</code></pre></div>
+<p><strong>Options:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--traceback</code></td>
+<td>boolean</td>
+<td>do not hide traceback on error</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>--query-extra</code></td>
+<td>text</td>
+<td>extra query parameters, not listed in openapi (format: PARAM=VALUE)</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>--skip-io-mappings</code> / <code>--not-skip-io-mappings</code></td>
+<td>boolean</td>
+<td><code>true</code>, if all input/output mappings should not be invoked.</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>--skip-custom-listeners</code> / <code>--not-skip-custom-listeners</code></td>
+<td>boolean</td>
+<td><code>true</code>, if only the built-in ExecutionListeners should be notified with the end event.</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>--cascade</code> / <code>--not-cascade</code></td>
+<td>boolean</td>
+<td><code>true</code>, if all process instances, historic process instances and jobs for this deployment</td>
+<td></td>
+</tr>
+<tr>
+<td>should be deleted.</td>
+<td>None</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>-oT</code>, <code>--output-template</code></td>
+<td>text</td>
+<td>provide a template name (one of default, result-length) or provide a jinja2 template string that will be used.</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>-o</code>, <code>--output</code></td>
+<td>choice (<code>template</code>)</td>
+<td>N/A</td>
+<td><code>template</code></td>
+</tr>
+<tr>
+<td><code>--help</code></td>
+<td>boolean</td>
+<td>Show this message and exit.</td>
+<td><code>False</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="cctlnbspdelete-filter">cctl&nbsp;delete filter<a class="headerlink" href="#cctlnbspdelete-filter" title="Permanent link">&para;</a></h3>
+<p>Delete Filter
+Deletes a filter by id.
+URL: <code>/filter/{id}</code>
+Schema: <code>-</code></p>
+<p><strong>Usage:</strong></p>
+<div class="highlight"><pre><span></span><code>cctl&amp;nbsp;delete filter [OPTIONS] ID
+</code></pre></div>
+<p><strong>Options:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--traceback</code></td>
+<td>boolean</td>
+<td>do not hide traceback on error</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>--query-extra</code></td>
+<td>text</td>
+<td>extra query parameters, not listed in openapi (format: PARAM=VALUE)</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>-oT</code>, <code>--output-template</code></td>
+<td>text</td>
+<td>provide a template name (one of default, result-length) or provide a jinja2 template string that will be used.</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>-o</code>, <code>--output</code></td>
+<td>choice (<code>template</code>)</td>
+<td>N/A</td>
+<td><code>template</code></td>
+</tr>
+<tr>
+<td><code>--help</code></td>
+<td>boolean</td>
+<td>Show this message and exit.</td>
+<td><code>False</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="cctlnbspdelete-group">cctl&nbsp;delete group<a class="headerlink" href="#cctlnbspdelete-group" title="Permanent link">&para;</a></h3>
+<p>Delete Group
+Deletes a group by id.
+URL: <code>/group/{id}</code>
+Schema: <code>-</code></p>
+<p><strong>Usage:</strong></p>
+<div class="highlight"><pre><span></span><code>cctl&amp;nbsp;delete group [OPTIONS] ID
+</code></pre></div>
+<p><strong>Options:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--traceback</code></td>
+<td>boolean</td>
+<td>do not hide traceback on error</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>--query-extra</code></td>
+<td>text</td>
+<td>extra query parameters, not listed in openapi (format: PARAM=VALUE)</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>-oT</code>, <code>--output-template</code></td>
+<td>text</td>
+<td>provide a template name (one of default, result-length) or provide a jinja2 template string that will be used.</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>-o</code>, <code>--output</code></td>
+<td>choice (<code>template</code>)</td>
+<td>N/A</td>
+<td><code>template</code></td>
+</tr>
+<tr>
+<td><code>--help</code></td>
+<td>boolean</td>
+<td>Show this message and exit.</td>
+<td><code>False</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="cctlnbspdelete-groupmember">cctl&nbsp;delete groupMember<a class="headerlink" href="#cctlnbspdelete-groupmember" title="Permanent link">&para;</a></h3>
+<p>Delete a Group Member
+Removes a member from a group.
+URL: <code>/group/{id}/members/{userId}</code>
+Schema: <code>-</code></p>
+<p><strong>Usage:</strong></p>
+<div class="highlight"><pre><span></span><code>cctl&amp;nbsp;delete groupMember [OPTIONS] USERID ID
+</code></pre></div>
+<p><strong>Options:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--traceback</code></td>
+<td>boolean</td>
+<td>do not hide traceback on error</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>--query-extra</code></td>
+<td>text</td>
+<td>extra query parameters, not listed in openapi (format: PARAM=VALUE)</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>-oT</code>, <code>--output-template</code></td>
+<td>text</td>
+<td>provide a template name (one of default, result-length) or provide a jinja2 template string that will be used.</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>-o</code>, <code>--output</code></td>
+<td>choice (<code>template</code>)</td>
+<td>N/A</td>
+<td><code>template</code></td>
+</tr>
+<tr>
+<td><code>--help</code></td>
+<td>boolean</td>
+<td>Show this message and exit.</td>
+<td><code>False</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="cctlnbspdelete-groupmembership">cctl&nbsp;delete groupMembership<a class="headerlink" href="#cctlnbspdelete-groupmembership" title="Permanent link">&para;</a></h3>
+<p>Create Tenant Group Membership
+Creates a membership between a tenant and a group.
+URL: <code>/tenant/{id}/group-members/{groupId}</code>
+Schema: <code>-</code></p>
+<p><strong>Usage:</strong></p>
+<div class="highlight"><pre><span></span><code>cctl&amp;nbsp;delete groupMembership [OPTIONS] GROUPID ID
+</code></pre></div>
+<p><strong>Options:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--traceback</code></td>
+<td>boolean</td>
+<td>do not hide traceback on error</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>--query-extra</code></td>
+<td>text</td>
+<td>extra query parameters, not listed in openapi (format: PARAM=VALUE)</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>-oT</code>, <code>--output-template</code></td>
+<td>text</td>
+<td>provide a template name (one of default, result-length) or provide a jinja2 template string that will be used.</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>-o</code>, <code>--output</code></td>
+<td>choice (<code>template</code>)</td>
+<td>N/A</td>
+<td><code>template</code></td>
+</tr>
+<tr>
+<td><code>--help</code></td>
+<td>boolean</td>
+<td>Show this message and exit.</td>
+<td><code>False</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="cctlnbspdelete-historicbatch">cctl&nbsp;delete historicBatch<a class="headerlink" href="#cctlnbspdelete-historicbatch" title="Permanent link">&para;</a></h3>
+<p>Delete Historic Batch
+Deletes a historic batch by id, including related historic job logs.
+URL: <code>/history/batch/{id}</code>
+Schema: <code>-</code></p>
+<p><strong>Usage:</strong></p>
+<div class="highlight"><pre><span></span><code>cctl&amp;nbsp;delete historicBatch [OPTIONS] ID
+</code></pre></div>
+<p><strong>Options:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--traceback</code></td>
+<td>boolean</td>
+<td>do not hide traceback on error</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>--query-extra</code></td>
+<td>text</td>
+<td>extra query parameters, not listed in openapi (format: PARAM=VALUE)</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>-oT</code>, <code>--output-template</code></td>
+<td>text</td>
+<td>provide a template name (one of default, result-length) or provide a jinja2 template string that will be used.</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>-o</code>, <code>--output</code></td>
+<td>choice (<code>template</code>)</td>
+<td>N/A</td>
+<td><code>template</code></td>
+</tr>
+<tr>
+<td><code>--help</code></td>
+<td>boolean</td>
+<td>Show this message and exit.</td>
+<td><code>False</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="cctlnbspdelete-historicprocessinstance">cctl&nbsp;delete historicProcessInstance<a class="headerlink" href="#cctlnbspdelete-historicprocessinstance" title="Permanent link">&para;</a></h3>
+<p>Delete
+Deletes a process instance from the history by id.
+URL: <code>/history/process-instance/{id}</code>
+Schema: <code>-</code></p>
+<p><strong>Usage:</strong></p>
+<div class="highlight"><pre><span></span><code>cctl&amp;nbsp;delete historicProcessInstance [OPTIONS] ID
+</code></pre></div>
+<p><strong>Options:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--traceback</code></td>
+<td>boolean</td>
+<td>do not hide traceback on error</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>--query-extra</code></td>
+<td>text</td>
+<td>extra query parameters, not listed in openapi (format: PARAM=VALUE)</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>--fail-if-not-exists</code> / <code>--not-fail-if-not-exists</code></td>
+<td>boolean</td>
+<td>If set to <code>false</code>, the request will still be successful if the process id is not found.</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>-oT</code>, <code>--output-template</code></td>
+<td>text</td>
+<td>provide a template name (one of default, result-length) or provide a jinja2 template string that will be used.</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>-o</code>, <code>--output</code></td>
+<td>choice (<code>template</code>)</td>
+<td>N/A</td>
+<td><code>template</code></td>
+</tr>
+<tr>
+<td><code>--help</code></td>
+<td>boolean</td>
+<td>Show this message and exit.</td>
+<td><code>False</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="cctlnbspdelete-historicvariableinstance">cctl&nbsp;delete historicVariableInstance<a class="headerlink" href="#cctlnbspdelete-historicvariableinstance" title="Permanent link">&para;</a></h3>
+<p>Delete Variable Instance
+Deletes a historic variable instance by id.
+URL: <code>/history/variable-instance/{id}</code>
+Schema: <code>-</code></p>
+<p><strong>Usage:</strong></p>
+<div class="highlight"><pre><span></span><code>cctl&amp;nbsp;delete historicVariableInstance [OPTIONS] ID
+</code></pre></div>
+<p><strong>Options:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--traceback</code></td>
+<td>boolean</td>
+<td>do not hide traceback on error</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>--query-extra</code></td>
+<td>text</td>
+<td>extra query parameters, not listed in openapi (format: PARAM=VALUE)</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>-oT</code>, <code>--output-template</code></td>
+<td>text</td>
+<td>provide a template name (one of default, result-length) or provide a jinja2 template string that will be used.</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>-o</code>, <code>--output</code></td>
+<td>choice (<code>template</code>)</td>
+<td>N/A</td>
+<td><code>template</code></td>
+</tr>
+<tr>
+<td><code>--help</code></td>
+<td>boolean</td>
+<td>Show this message and exit.</td>
+<td><code>False</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="cctlnbspdelete-historicvariableinstancesofhistoricprocessinstance">cctl&nbsp;delete historicVariableInstancesOfHistoricProcessInstance<a class="headerlink" href="#cctlnbspdelete-historicvariableinstancesofhistoricprocessinstance" title="Permanent link">&para;</a></h3>
+<p>Delete Variable Instances
+Deletes all variables of a process instance from the history by id.
+URL: <code>/history/process-instance/{id}/variable-instances</code>
+Schema: <code>-</code></p>
+<p><strong>Usage:</strong></p>
+<div class="highlight"><pre><span></span><code>cctl&amp;nbsp;delete historicVariableInstancesOfHistoricProcessInstance 
+    [OPTIONS] ID
+</code></pre></div>
+<p><strong>Options:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--traceback</code></td>
+<td>boolean</td>
+<td>do not hide traceback on error</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>--query-extra</code></td>
+<td>text</td>
+<td>extra query parameters, not listed in openapi (format: PARAM=VALUE)</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>-oT</code>, <code>--output-template</code></td>
+<td>text</td>
+<td>provide a template name (one of default, result-length) or provide a jinja2 template string that will be used.</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>-o</code>, <code>--output</code></td>
+<td>choice (<code>template</code>)</td>
+<td>N/A</td>
+<td><code>template</code></td>
+</tr>
+<tr>
+<td><code>--help</code></td>
+<td>boolean</td>
+<td>Show this message and exit.</td>
+<td><code>False</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="cctlnbspdelete-incident">cctl&nbsp;delete incident<a class="headerlink" href="#cctlnbspdelete-incident" title="Permanent link">&para;</a></h3>
+<p>Resolve Incident
+Resolves an incident with given id.
+URL: <code>/incident/{id}</code>
+Schema: <code>-</code></p>
+<p><strong>Usage:</strong></p>
+<div class="highlight"><pre><span></span><code>cctl&amp;nbsp;delete incident [OPTIONS] ID
+</code></pre></div>
+<p><strong>Options:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--traceback</code></td>
+<td>boolean</td>
+<td>do not hide traceback on error</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>--query-extra</code></td>
+<td>text</td>
+<td>extra query parameters, not listed in openapi (format: PARAM=VALUE)</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>-oT</code>, <code>--output-template</code></td>
+<td>text</td>
+<td>provide a template name (one of default, result-length) or provide a jinja2 template string that will be used.</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>-o</code>, <code>--output</code></td>
+<td>choice (<code>template</code>)</td>
+<td>N/A</td>
+<td><code>template</code></td>
+</tr>
+<tr>
+<td><code>--help</code></td>
+<td>boolean</td>
+<td>Show this message and exit.</td>
+<td><code>False</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="cctlnbspdelete-localexecutionvariable">cctl&nbsp;delete localExecutionVariable<a class="headerlink" href="#cctlnbspdelete-localexecutionvariable" title="Permanent link">&para;</a></h3>
+<p>Delete Local Execution Variable
+Deletes a variable in the context of a given execution by id. Deletion does not
+propagate upwards in the execution hierarchy.
+URL: <code>/execution/{id}/localVariables/{varName}</code>
+Schema: <code>-</code></p>
+<p><strong>Usage:</strong></p>
+<div class="highlight"><pre><span></span><code>cctl&amp;nbsp;delete localExecutionVariable [OPTIONS] VARNAME ID
+</code></pre></div>
+<p><strong>Options:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--traceback</code></td>
+<td>boolean</td>
+<td>do not hide traceback on error</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>--query-extra</code></td>
+<td>text</td>
+<td>extra query parameters, not listed in openapi (format: PARAM=VALUE)</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>-oT</code>, <code>--output-template</code></td>
+<td>text</td>
+<td>provide a template name (one of default, result-length) or provide a jinja2 template string that will be used.</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>-o</code>, <code>--output</code></td>
+<td>choice (<code>template</code>)</td>
+<td>N/A</td>
+<td><code>template</code></td>
+</tr>
+<tr>
+<td><code>--help</code></td>
+<td>boolean</td>
+<td>Show this message and exit.</td>
+<td><code>False</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="cctlnbspdelete-processdefinition">cctl&nbsp;delete processDefinition<a class="headerlink" href="#cctlnbspdelete-processdefinition" title="Permanent link">&para;</a></h3>
+<p>Delete
+Deletes a running process instance by id.
+URL: <code>/process-definition/{id}</code>
+Schema: <code>-</code></p>
+<p><strong>Usage:</strong></p>
+<div class="highlight"><pre><span></span><code>cctl&amp;nbsp;delete processDefinition [OPTIONS] ID
+</code></pre></div>
+<p><strong>Options:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--traceback</code></td>
+<td>boolean</td>
+<td>do not hide traceback on error</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>--query-extra</code></td>
+<td>text</td>
+<td>extra query parameters, not listed in openapi (format: PARAM=VALUE)</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>--skip-io-mappings</code> / <code>--not-skip-io-mappings</code></td>
+<td>boolean</td>
+<td>A boolean value to control whether input/output mappings should be executed during deletion.</td>
+<td></td>
+</tr>
+<tr>
+<td><code>true</code>, if input/output mappings should not be invoked.</td>
+<td>None</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>--skip-custom-listeners</code> / <code>--not-skip-custom-listeners</code></td>
+<td>boolean</td>
+<td><code>true</code>, if only the built-in ExecutionListeners should be notified with the end event.</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>--cascade</code> / <code>--not-cascade</code></td>
+<td>boolean</td>
+<td><code>true</code>, if all process instances, historic process instances and jobs</td>
+<td></td>
+</tr>
+<tr>
+<td>for this process definition should be deleted.</td>
+<td>None</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>-oT</code>, <code>--output-template</code></td>
+<td>text</td>
+<td>provide a template name (one of default, result-length) or provide a jinja2 template string that will be used.</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>-o</code>, <code>--output</code></td>
+<td>choice (<code>template</code>)</td>
+<td>N/A</td>
+<td><code>template</code></td>
+</tr>
+<tr>
+<td><code>--help</code></td>
+<td>boolean</td>
+<td>Show this message and exit.</td>
+<td><code>False</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="cctlnbspdelete-processdefinitionsbykey">cctl&nbsp;delete processDefinitionsByKey<a class="headerlink" href="#cctlnbspdelete-processdefinitionsbykey" title="Permanent link">&para;</a></h3>
+<p>Delete By Key
+Deletes process definitions by a given key which belong to no tenant id.
+URL: <code>/process-definition/key/{key}</code>
+Schema: <code>-</code></p>
+<p><strong>Usage:</strong></p>
+<div class="highlight"><pre><span></span><code>cctl&amp;nbsp;delete processDefinitionsByKey [OPTIONS] KEY
+</code></pre></div>
+<p><strong>Options:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--traceback</code></td>
+<td>boolean</td>
+<td>do not hide traceback on error</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>--query-extra</code></td>
+<td>text</td>
+<td>extra query parameters, not listed in openapi (format: PARAM=VALUE)</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>--skip-io-mappings</code> / <code>--not-skip-io-mappings</code></td>
+<td>boolean</td>
+<td>A boolean value to control whether input/output mappings should be executed during deletion.</td>
+<td></td>
+</tr>
+<tr>
+<td><code>true</code>, if input/output mappings should not be invoked.</td>
+<td>None</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>--skip-custom-listeners</code> / <code>--not-skip-custom-listeners</code></td>
+<td>boolean</td>
+<td><code>true</code>, if only the built-in ExecutionListeners should be notified with the end event.</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>--cascade</code> / <code>--not-cascade</code></td>
+<td>boolean</td>
+<td><code>true</code>, if all process instances, historic process instances and jobs</td>
+<td></td>
+</tr>
+<tr>
+<td>for this process definition should be deleted.</td>
+<td>None</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>-oT</code>, <code>--output-template</code></td>
+<td>text</td>
+<td>provide a template name (one of default, result-length) or provide a jinja2 template string that will be used.</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>-o</code>, <code>--output</code></td>
+<td>choice (<code>template</code>)</td>
+<td>N/A</td>
+<td><code>template</code></td>
+</tr>
+<tr>
+<td><code>--help</code></td>
+<td>boolean</td>
+<td>Show this message and exit.</td>
+<td><code>False</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="cctlnbspdelete-processdefinitionsbykeyandtenantid">cctl&nbsp;delete processDefinitionsByKeyAndTenantId<a class="headerlink" href="#cctlnbspdelete-processdefinitionsbykeyandtenantid" title="Permanent link">&para;</a></h3>
+<p>Delete By Key
+Deletes process definitions by a given key and which belong to a tenant id.
+URL: <code>/process-definition/key/{key}/tenant-id/{tenant-id}</code>
+Schema: <code>-</code></p>
+<p><strong>Usage:</strong></p>
+<div class="highlight"><pre><span></span><code>cctl&amp;nbsp;delete processDefinitionsByKeyAndTenantId [OPTIONS] TENANT_ID KEY
+</code></pre></div>
+<p><strong>Options:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--traceback</code></td>
+<td>boolean</td>
+<td>do not hide traceback on error</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>--query-extra</code></td>
+<td>text</td>
+<td>extra query parameters, not listed in openapi (format: PARAM=VALUE)</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>--skip-io-mappings</code> / <code>--not-skip-io-mappings</code></td>
+<td>boolean</td>
+<td>A boolean value to control whether input/output mappings should be executed during deletion.</td>
+<td></td>
+</tr>
+<tr>
+<td><code>true</code>, if input/output mappings should not be invoked.</td>
+<td>None</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>--skip-custom-listeners</code> / <code>--not-skip-custom-listeners</code></td>
+<td>boolean</td>
+<td><code>true</code>, if only the built-in ExecutionListeners should be notified with the end event.</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>--cascade</code> / <code>--not-cascade</code></td>
+<td>boolean</td>
+<td><code>true</code>, if all process instances, historic process instances and jobs</td>
+<td></td>
+</tr>
+<tr>
+<td>for this process definition should be deleted.</td>
+<td>None</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>-oT</code>, <code>--output-template</code></td>
+<td>text</td>
+<td>provide a template name (one of default, result-length) or provide a jinja2 template string that will be used.</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>-o</code>, <code>--output</code></td>
+<td>choice (<code>template</code>)</td>
+<td>N/A</td>
+<td><code>template</code></td>
+</tr>
+<tr>
+<td><code>--help</code></td>
+<td>boolean</td>
+<td>Show this message and exit.</td>
+<td><code>False</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="cctlnbspdelete-processinstance">cctl&nbsp;delete processInstance<a class="headerlink" href="#cctlnbspdelete-processinstance" title="Permanent link">&para;</a></h3>
+<p>Delete
+Deletes a running process instance by id.
+URL: <code>/process-instance/{id}</code>
+Schema: <code>-</code></p>
+<p><strong>Usage:</strong></p>
+<div class="highlight"><pre><span></span><code>cctl&amp;nbsp;delete processInstance [OPTIONS] ID
+</code></pre></div>
+<p><strong>Options:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--traceback</code></td>
+<td>boolean</td>
+<td>do not hide traceback on error</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>--query-extra</code></td>
+<td>text</td>
+<td>extra query parameters, not listed in openapi (format: PARAM=VALUE)</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>--fail-if-not-exists</code> / <code>--not-fail-if-not-exists</code></td>
+<td>boolean</td>
+<td>If set to false, the request will still be successful if the process id is not found.</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>--skip-subprocesses</code> / <code>--not-skip-subprocesses</code></td>
+<td>boolean</td>
+<td>If set to true, subprocesses related to deleted processes will be skipped.</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>--skip-io-mappings</code> / <code>--not-skip-io-mappings</code></td>
+<td>boolean</td>
+<td>If set to true, the input/output mappings will be skipped.</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>--skip-custom-listeners</code> / <code>--not-skip-custom-listeners</code></td>
+<td>boolean</td>
+<td>If set to true, the custom listeners will be skipped.</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>-oT</code>, <code>--output-template</code></td>
+<td>text</td>
+<td>provide a template name (one of default, result-length) or provide a jinja2 template string that will be used.</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>-o</code>, <code>--output</code></td>
+<td>choice (<code>template</code>)</td>
+<td>N/A</td>
+<td><code>template</code></td>
+</tr>
+<tr>
+<td><code>--help</code></td>
+<td>boolean</td>
+<td>Show this message and exit.</td>
+<td><code>False</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="cctlnbspdelete-processinstancevariable">cctl&nbsp;delete processInstanceVariable<a class="headerlink" href="#cctlnbspdelete-processinstancevariable" title="Permanent link">&para;</a></h3>
+<p>Delete Process Variable
+Deletes a variable of a process instance by id.
+URL: <code>/process-instance/{id}/variables/{varName}</code>
+Schema: <code>-</code></p>
+<p><strong>Usage:</strong></p>
+<div class="highlight"><pre><span></span><code>cctl&amp;nbsp;delete processInstanceVariable [OPTIONS] VARNAME ID
+</code></pre></div>
+<p><strong>Options:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--traceback</code></td>
+<td>boolean</td>
+<td>do not hide traceback on error</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>--query-extra</code></td>
+<td>text</td>
+<td>extra query parameters, not listed in openapi (format: PARAM=VALUE)</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>-oT</code>, <code>--output-template</code></td>
+<td>text</td>
+<td>provide a template name (one of default, result-length) or provide a jinja2 template string that will be used.</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>-o</code>, <code>--output</code></td>
+<td>choice (<code>template</code>)</td>
+<td>N/A</td>
+<td><code>template</code></td>
+</tr>
+<tr>
+<td><code>--help</code></td>
+<td>boolean</td>
+<td>Show this message and exit.</td>
+<td><code>False</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="cctlnbspdelete-task">cctl&nbsp;delete task<a class="headerlink" href="#cctlnbspdelete-task" title="Permanent link">&para;</a></h3>
+<p>Delete
+Removes a task by id.
+URL: <code>/task/{id}</code>
+Schema: <code>-</code></p>
+<p><strong>Usage:</strong></p>
+<div class="highlight"><pre><span></span><code>cctl&amp;nbsp;delete task [OPTIONS] ID
+</code></pre></div>
+<p><strong>Options:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--traceback</code></td>
+<td>boolean</td>
+<td>do not hide traceback on error</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>--query-extra</code></td>
+<td>text</td>
+<td>extra query parameters, not listed in openapi (format: PARAM=VALUE)</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>-oT</code>, <code>--output-template</code></td>
+<td>text</td>
+<td>provide a template name (one of default, result-length) or provide a jinja2 template string that will be used.</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>-o</code>, <code>--output</code></td>
+<td>choice (<code>template</code>)</td>
+<td>N/A</td>
+<td><code>template</code></td>
+</tr>
+<tr>
+<td><code>--help</code></td>
+<td>boolean</td>
+<td>Show this message and exit.</td>
+<td><code>False</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="cctlnbspdelete-tasklocalvariable">cctl&nbsp;delete taskLocalVariable<a class="headerlink" href="#cctlnbspdelete-tasklocalvariable" title="Permanent link">&para;</a></h3>
+<p>Delete Local Task Variable
+Removes a local variable from a task by id.
+URL: <code>/task/{id}/localVariables/{varName}</code>
+Schema: <code>-</code></p>
+<p><strong>Usage:</strong></p>
+<div class="highlight"><pre><span></span><code>cctl&amp;nbsp;delete taskLocalVariable [OPTIONS] VARNAME ID
+</code></pre></div>
+<p><strong>Options:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--traceback</code></td>
+<td>boolean</td>
+<td>do not hide traceback on error</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>--query-extra</code></td>
+<td>text</td>
+<td>extra query parameters, not listed in openapi (format: PARAM=VALUE)</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>-oT</code>, <code>--output-template</code></td>
+<td>text</td>
+<td>provide a template name (one of default, result-length) or provide a jinja2 template string that will be used.</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>-o</code>, <code>--output</code></td>
+<td>choice (<code>template</code>)</td>
+<td>N/A</td>
+<td><code>template</code></td>
+</tr>
+<tr>
+<td><code>--help</code></td>
+<td>boolean</td>
+<td>Show this message and exit.</td>
+<td><code>False</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="cctlnbspdelete-taskmetrics">cctl&nbsp;delete taskMetrics<a class="headerlink" href="#cctlnbspdelete-taskmetrics" title="Permanent link">&para;</a></h3>
+<p>Delete Task Worker Metrics
+Deletes all task worker metrics prior to the given date or all if no date is provided.
+URL: <code>/metrics/task-worker</code>
+Schema: <code>-</code></p>
+<p><strong>Usage:</strong></p>
+<div class="highlight"><pre><span></span><code>cctl&amp;nbsp;delete taskMetrics [OPTIONS]
+</code></pre></div>
+<p><strong>Options:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--traceback</code></td>
+<td>boolean</td>
+<td>do not hide traceback on error</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>--query-extra</code></td>
+<td>text</td>
+<td>extra query parameters, not listed in openapi (format: PARAM=VALUE)</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>--date</code></td>
+<td>text</td>
+<td>The date prior to which all task worker metrics should be deleted.</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>-oT</code>, <code>--output-template</code></td>
+<td>text</td>
+<td>provide a template name (one of default, result-length) or provide a jinja2 template string that will be used.</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>-o</code>, <code>--output</code></td>
+<td>choice (<code>template</code>)</td>
+<td>N/A</td>
+<td><code>template</code></td>
+</tr>
+<tr>
+<td><code>--help</code></td>
+<td>boolean</td>
+<td>Show this message and exit.</td>
+<td><code>False</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="cctlnbspdelete-taskvariable">cctl&nbsp;delete taskVariable<a class="headerlink" href="#cctlnbspdelete-taskvariable" title="Permanent link">&para;</a></h3>
+<p>Delete Task Variable
+Removes a variable that is visible to a task. A variable is visible to a task if it is a local task
+variable or declared in a parent scope of the task. See documentation on
+<a href="https://docs.camunda.org/manual/latest/user-guide/process-engine/variables/">visiblity of variables</a>.
+URL: <code>/task/{id}/variables/{varName}</code>
+Schema: <code>-</code></p>
+<p><strong>Usage:</strong></p>
+<div class="highlight"><pre><span></span><code>cctl&amp;nbsp;delete taskVariable [OPTIONS] VARNAME ID
+</code></pre></div>
+<p><strong>Options:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--traceback</code></td>
+<td>boolean</td>
+<td>do not hide traceback on error</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>--query-extra</code></td>
+<td>text</td>
+<td>extra query parameters, not listed in openapi (format: PARAM=VALUE)</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>-oT</code>, <code>--output-template</code></td>
+<td>text</td>
+<td>provide a template name (one of default, result-length) or provide a jinja2 template string that will be used.</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>-o</code>, <code>--output</code></td>
+<td>choice (<code>template</code>)</td>
+<td>N/A</td>
+<td><code>template</code></td>
+</tr>
+<tr>
+<td><code>--help</code></td>
+<td>boolean</td>
+<td>Show this message and exit.</td>
+<td><code>False</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="cctlnbspdelete-tenant">cctl&nbsp;delete tenant<a class="headerlink" href="#cctlnbspdelete-tenant" title="Permanent link">&para;</a></h3>
+<p>Delete Tenant
+Deletes a tenant by id.
+URL: <code>/tenant/{id}</code>
+Schema: <code>-</code></p>
+<p><strong>Usage:</strong></p>
+<div class="highlight"><pre><span></span><code>cctl&amp;nbsp;delete tenant [OPTIONS] ID
+</code></pre></div>
+<p><strong>Options:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--traceback</code></td>
+<td>boolean</td>
+<td>do not hide traceback on error</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>--query-extra</code></td>
+<td>text</td>
+<td>extra query parameters, not listed in openapi (format: PARAM=VALUE)</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>-oT</code>, <code>--output-template</code></td>
+<td>text</td>
+<td>provide a template name (one of default, result-length) or provide a jinja2 template string that will be used.</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>-o</code>, <code>--output</code></td>
+<td>choice (<code>template</code>)</td>
+<td>N/A</td>
+<td><code>template</code></td>
+</tr>
+<tr>
+<td><code>--help</code></td>
+<td>boolean</td>
+<td>Show this message and exit.</td>
+<td><code>False</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="cctlnbspdelete-user">cctl&nbsp;delete user<a class="headerlink" href="#cctlnbspdelete-user" title="Permanent link">&para;</a></h3>
+<p>Delete
+Deletes a user by id.
+URL: <code>/user/{id}</code>
+Schema: <code>-</code></p>
+<p><strong>Usage:</strong></p>
+<div class="highlight"><pre><span></span><code>cctl&amp;nbsp;delete user [OPTIONS] ID
+</code></pre></div>
+<p><strong>Options:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--traceback</code></td>
+<td>boolean</td>
+<td>do not hide traceback on error</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>--query-extra</code></td>
+<td>text</td>
+<td>extra query parameters, not listed in openapi (format: PARAM=VALUE)</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>-oT</code>, <code>--output-template</code></td>
+<td>text</td>
+<td>provide a template name (one of default, result-length) or provide a jinja2 template string that will be used.</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>-o</code>, <code>--output</code></td>
+<td>choice (<code>template</code>)</td>
+<td>N/A</td>
+<td><code>template</code></td>
+</tr>
+<tr>
+<td><code>--help</code></td>
+<td>boolean</td>
+<td>Show this message and exit.</td>
+<td><code>False</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="cctlnbspdelete-usermembership">cctl&nbsp;delete userMembership<a class="headerlink" href="#cctlnbspdelete-usermembership" title="Permanent link">&para;</a></h3>
+<p>Delete a Tenant User Membership
+Deletes a membership between a tenant and an user.
+URL: <code>/tenant/{id}/user-members/{userId}</code>
+Schema: <code>-</code></p>
+<p><strong>Usage:</strong></p>
+<div class="highlight"><pre><span></span><code>cctl&amp;nbsp;delete userMembership [OPTIONS] USERID ID
+</code></pre></div>
+<p><strong>Options:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--traceback</code></td>
+<td>boolean</td>
+<td>do not hide traceback on error</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>--query-extra</code></td>
+<td>text</td>
+<td>extra query parameters, not listed in openapi (format: PARAM=VALUE)</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>-oT</code>, <code>--output-template</code></td>
+<td>text</td>
+<td>provide a template name (one of default, result-length) or provide a jinja2 template string that will be used.</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>-o</code>, <code>--output</code></td>
+<td>choice (<code>template</code>)</td>
+<td>N/A</td>
+<td><code>template</code></td>
+</tr>
+<tr>
+<td><code>--help</code></td>
+<td>boolean</td>
+<td>Show this message and exit.</td>
+<td><code>False</code></td>
+</tr>
+</tbody>
+</table>
+
+              
+            </article>
+          </div>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    <nav class="md-footer__inner md-grid" aria-label="Footer">
+      
+        
+        <a href="../apply/" class="md-footer__link md-footer__link--prev" aria-label="Previous: apply Commands" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              apply Commands
+            </div>
+          </div>
+        </a>
+      
+      
+        
+        <a href="../describe/" class="md-footer__link md-footer__link--next" aria-label="Next: describe Commands" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              describe Commands
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "../..", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../assets/javascripts/workers/search.0bbba5b5.min.js"}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.649a939e.min.js"></script>
+      
+    
+  </body>
+</html>
